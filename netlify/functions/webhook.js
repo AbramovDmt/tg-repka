@@ -11,7 +11,7 @@ const KEYBOARD = {
       { text: '🔥 Забронировать баню',  web_app: { url: `${APP_URL}?startapp=sauna`   } },
     ],
     [
-      { text: '📅 Выбрать даты',        web_app: { url: `${APP_URL}?startapp=booking` } },
+      { text: '✉️ Связаться с хозяином', web_app: { url: `${APP_URL}?startapp=contact` } },
     ],
   ],
   resize_keyboard: true,

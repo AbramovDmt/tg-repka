@@ -541,8 +541,8 @@ const screens = {
           <div class="platform-section">
             <p class="platform-label">Или забронировать через площадку:</p>
             <div class="platform-btns">
-              <div class="btn-platform" data-action="openLink" data-url="https://www.avito.ru">Авито</div>
-              <div class="btn-platform" data-action="openLink" data-url="https://sutochno.ru">Суточно.ру</div>
+              <div class="btn-platform" data-action="openLink" data-url="https://www.cian.ru/rent/suburban/325890116">ЦИАН</div>
+              <div class="btn-platform" data-action="openLink" data-url="https://sutochno.ru/front/searchapp/detail/1840600?host_id=14014121&host_device=app&guest_id=">Суточно.ру</div>
             </div>
           </div>
         </div>
@@ -1319,6 +1319,7 @@ const START_ROUTES = {
   booking: 'booking',
   book:    'booking',
   sauna:   'sauna',
+  contact: 'contact',
   баня:    'sauna',
   домик:   'booking',
 };
