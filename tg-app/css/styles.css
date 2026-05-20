@@ -204,7 +204,7 @@ textarea, input { font-family: var(--font); }
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-bottom: 100px; /* место для MainButton */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   background: var(--tg-bg);
 }
 
@@ -1766,3 +1766,134 @@ textarea, input { font-family: var(--font); }
   transition: opacity .15s;
 }
 .offer-skip:active { opacity: .6; }
+
+/* ═══════════════════════════════════════════════════════════
+   BOTTOM TAB BAR
+   ═══════════════════════════════════════════════════════════ */
+
+#tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: rgba(9,18,10,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(180,220,155,0.10);
+  display: flex;
+  align-items: stretch;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+}
+
+#tab-bar.hidden {
+  transform: translateX(-50%) translateY(110%);
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 10px 4px 11px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(122,148,112,0.65);
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.tab-btn.active {
+  color: var(--accent);
+}
+
+.tab-btn:active { opacity: 0.65; }
+
+.tab-btn-icon {
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+}
+
+.tab-btn.active .tab-btn-icon {
+  transform: scale(1.12);
+}
+
+.tab-btn-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ГЛАВНАЯ — ИНФО-КАРТОЧКА
+   ═══════════════════════════════════════════════════════════ */
+
+.home-content {
+  background: var(--tg-bg);
+  padding: var(--sp-md);
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+.home-info-card {
+  background: var(--card-bg);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--divider);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  margin-bottom: var(--sp-sm);
+  transition: opacity 0.15s;
+}
+
+.home-info-card:active { opacity: 0.82; }
+
+.home-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px var(--sp-md);
+  border-bottom: 1px solid var(--divider);
+  font-size: 14px;
+}
+
+.home-info-label { color: var(--tg-hint); }
+.home-info-value { font-weight: 600; }
+
+.home-info-cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px var(--sp-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ЭКРАН ЕЩЁ
+   ═══════════════════════════════════════════════════════════ */
+
+.more-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px var(--sp-md);
+  border-bottom: 1px solid var(--divider);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.more-item:last-child { border-bottom: none; }
+.more-item:active { background: rgba(180,220,155,0.06); }
+
+.more-item-icon { font-size: 22px; width: 28px; text-align: center; flex-shrink: 0; }
+.more-item-label { flex: 1; font-size: 16px; font-weight: 500; }
+.more-item-arrow { color: var(--tg-hint); font-size: 20px; }

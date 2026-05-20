@@ -126,8 +126,56 @@ const router = {
     showBackButton(this.stack.length > 1);
     setupScreenButtons(screenId, params);
     afterRender(screenId);
+    updateTabBar(screenId);
   },
 };
+
+/* ═══ ТАБ-БАР ══════════════════════════════════════════════ */
+
+const TAB_SCREENS = { home: 'home', booking: 'booking', sauna: 'sauna', more: 'more' };
+
+const SCREEN_TAB = {
+  home: 'home', house: 'home',
+  booking: 'booking',
+  sauna: 'sauna',
+  more: 'more', bikes: 'more', nearby: 'more', instructions: 'more', contact: 'more',
+};
+
+function renderTabBar() {
+  const nav = document.createElement('nav');
+  nav.id = 'tab-bar';
+  nav.innerHTML = [
+    { id: 'home',    icon: '🏠', label: 'Домик'      },
+    { id: 'booking', icon: '📅', label: 'Бронировать' },
+    { id: 'sauna',   icon: '🔥', label: 'Баня'        },
+    { id: 'more',    icon: '⊞',  label: 'Ещё'         },
+  ].map(t => `
+    <button class="tab-btn" data-tab="${t.id}">
+      <span class="tab-btn-icon">${t.icon}</span>
+      <span class="tab-btn-label">${t.label}</span>
+    </button>`).join('');
+  document.getElementById('app').appendChild(nav);
+  nav.addEventListener('click', e => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    haptic('light');
+    switchTab(btn.dataset.tab);
+  });
+}
+
+function switchTab(tabId) {
+  const screenId = TAB_SCREENS[tabId] || tabId;
+  router.stack = [{ id: screenId, params: {} }];
+  router._render(screenId, {}, 'fade');
+}
+
+function updateTabBar(screenId) {
+  const activeTab = SCREEN_TAB[screenId] || null;
+  document.querySelectorAll('#tab-bar .tab-btn').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.tab === activeTab));
+  const bar = document.getElementById('tab-bar');
+  if (bar) bar.classList.toggle('hidden', !activeTab);
+}
 
 /* ═══ УТИЛИТЫ ═══════════════════════════════════════════════ */
 
@@ -344,7 +392,9 @@ const screens = {
   },
 
   /* ── Главная ───────────────────────────────────────────── */
-  home: () => `
+  home: () => {
+    const d = APP_DATA.house;
+    return `
     <div class="home-screen">
       <div class="hero">
         <div class="hero-image"></div>
@@ -362,43 +412,33 @@ const screens = {
           Свободно: 26–28 июня (выходные)
         </div>
 
-        <div class="nav-grid">
-          <div class="nav-card" data-action="navigate" data-screen="house">
-            <div class="nav-card-icon">🏠</div>
-            <div class="nav-card-label">Домик</div>
+        <div class="home-info-card" data-action="navigate" data-screen="house">
+          <div class="home-info-row">
+            <span class="home-info-label">Цена</span>
+            <span class="home-info-value">от ${fmtPrice(d.priceWeekday)}/ночь</span>
           </div>
-          <div class="nav-card accent" data-action="navigate" data-screen="booking">
-            <div class="nav-card-icon">📅</div>
-            <div class="nav-card-label">Бронировать</div>
+          <div class="home-info-row">
+            <span class="home-info-label">Гости</span>
+            <span class="home-info-value">до ${d.capacity} человек</span>
           </div>
-          <div class="nav-card" data-action="navigate" data-screen="sauna">
-            <div class="nav-card-icon">🔥</div>
-            <div class="nav-card-label">Баня</div>
+          <div class="home-info-row">
+            <span class="home-info-label">Площадь</span>
+            <span class="home-info-value">${d.area} м² · ${d.floors} этажа</span>
           </div>
-          <div class="nav-card" data-action="navigate" data-screen="bikes">
-            <div class="nav-card-icon">🚴</div>
-            <div class="nav-card-label">Велосипеды</div>
+          <div class="home-info-row">
+            <span class="home-info-label">Заезд / выезд</span>
+            <span class="home-info-value">с ${d.checkIn} / до ${d.checkOut}</span>
           </div>
-          <div class="nav-card" data-action="navigate" data-screen="nearby">
-            <div class="nav-card-icon">🗺</div>
-            <div class="nav-card-label">Что рядом</div>
-          </div>
-          <div class="nav-card" data-action="navigate" data-screen="instructions">
-            <div class="nav-card-icon">📋</div>
-            <div class="nav-card-label">Инструкции</div>
-          </div>
+          <div class="home-info-cta"><span>Подробнее о домике</span><span>›</span></div>
         </div>
 
-        <div class="home-contact" data-action="navigate" data-screen="contact">
-          <span>✉️ Связаться с хозяином</span>
-          <span class="arrow">›</span>
-        </div>
-        <div class="home-contact home-share" data-action="share">
+        <div class="home-contact" data-action="share">
           <span>🔗 Поделиться с другом</span>
           <span class="arrow">›</span>
         </div>
       </div>
-    </div>`,
+    </div>`;
+  },
 
   /* ── Домик ─────────────────────────────────────────────── */
   house: () => {
@@ -775,6 +815,41 @@ const screens = {
       </div>`;
   },
 
+  /* ── Ещё ───────────────────────────────────────────────── */
+  more: () => `
+    <div class="more-screen">
+      <div class="screen-header"><h2 class="screen-title">Ещё</h2></div>
+      <div class="screen-content">
+        <div class="section-card">
+          <div class="more-item" data-action="navigate" data-screen="house">
+            <span class="more-item-icon">🏠</span>
+            <span class="more-item-label">О домике</span>
+            <span class="more-item-arrow">›</span>
+          </div>
+          <div class="more-item" data-action="navigate" data-screen="bikes">
+            <span class="more-item-icon">🚴</span>
+            <span class="more-item-label">Велосипеды</span>
+            <span class="more-item-arrow">›</span>
+          </div>
+          <div class="more-item" data-action="navigate" data-screen="nearby">
+            <span class="more-item-icon">🗺</span>
+            <span class="more-item-label">Что рядом</span>
+            <span class="more-item-arrow">›</span>
+          </div>
+          <div class="more-item" data-action="navigate" data-screen="instructions">
+            <span class="more-item-icon">📋</span>
+            <span class="more-item-label">Инструкции</span>
+            <span class="more-item-arrow">›</span>
+          </div>
+          <div class="more-item" data-action="navigate" data-screen="contact">
+            <span class="more-item-icon">✉️</span>
+            <span class="more-item-label">Связаться с хозяином</span>
+            <span class="more-item-arrow">›</span>
+          </div>
+        </div>
+      </div>
+    </div>`,
+
   /* ── Экран успеха ──────────────────────────────────────── */
   success: (params = {}) => {
     const map = {
@@ -817,7 +892,8 @@ const screens = {
 function setupScreenButtons(screenId, params) {
   switch (screenId) {
     case 'home':
-      setMainButton('Проверить даты', () => router.navigate('booking'));
+    case 'more':
+      hideMainButton();
       break;
 
     case 'house':
@@ -1329,6 +1405,7 @@ const START_ROUTES = {
 document.addEventListener('DOMContentLoaded', () => {
   initTelegram();
   setupEvents();
+  renderTabBar();
 
   const param = getStartParam();
 
