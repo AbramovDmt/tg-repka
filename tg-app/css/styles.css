@@ -1796,6 +1796,23 @@ textarea, input { font-family: var(--font); }
 }
 .offer-skip:active { opacity: .6; }
 
+.promo-code-block {
+  margin: 12px 0 8px;
+  padding: 14px 24px;
+  background: rgba(76,200,112,0.10);
+  border: 1.5px dashed var(--accent);
+  border-radius: var(--r-md);
+  text-align: center;
+}
+
+.promo-code-text {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 4px;
+  font-family: 'Courier New', monospace;
+}
+
 /* ═══════════════════════════════════════════════════════════
    BOTTOM TAB BAR
    ═══════════════════════════════════════════════════════════ */

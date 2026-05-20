@@ -1359,10 +1359,30 @@ const actions = {
   },
 
   acceptOffer() {
-    closeOfferModal();
-    const url = 'https://t.me/repka_domik_bot?start=from_app';
-    if (tg) tg.openLink(url);
-    else window.open(url, '_blank', 'noopener');
+    localStorage.setItem(OFFER_KEY, '1');
+    hapticNotify('success');
+    const card = document.querySelector('#offer-modal .offer-card');
+    if (!card) return;
+    card.innerHTML = `
+      <span class="offer-emoji">✅</span>
+      <h2 class="offer-title">Промокод готов!</h2>
+      <p class="offer-subtitle">Назовите его хозяину при оформлении брони</p>
+      <div class="promo-code-block">
+        <span class="promo-code-text">FIRST10</span>
+      </div>
+      <button class="btn-offer" data-action="copyPromo">Скопировать промокод</button>
+      <button class="offer-skip" data-action="closeOffer">Закрыть</button>`;
+  },
+
+  copyPromo() {
+    navigator.clipboard?.writeText('FIRST10').then(() => {
+      hapticNotify('success');
+      const btn = document.querySelector('#offer-modal .btn-offer');
+      if (btn) {
+        btn.textContent = 'Скопировано ✓';
+        setTimeout(() => closeOfferModal(), 1400);
+      }
+    }).catch(() => closeOfferModal());
   },
 
   closeOffer() {
@@ -1417,10 +1437,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     router.reset();
     const route = START_ROUTES[param];
-    if (route) {
-      router.navigate(route);
-    } else {
-      setTimeout(showOfferModal, 700);
-    }
+    if (route) router.navigate(route);
   }
 });
