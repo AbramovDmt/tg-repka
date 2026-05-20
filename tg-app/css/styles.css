@@ -1559,22 +1559,65 @@ textarea, input { font-family: var(--font); }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ТАКТИЛЬНАЯ ОБРАТНАЯ СВЯЗЬ — весь интерактив
+   ЕДИНАЯ СИСТЕМА АНИМАЦИИ — ВСЕ КНОПКИ
    ═══════════════════════════════════════════════════════════ */
 
-.date-chip:not(.fully-booked),
-.slot-chip:not(.booked),
-.duration-chip,
-.place-action,
-.contact-btn,
-.accordion-header {
-  transition: transform .14s cubic-bezier(.34,1.56,.64,1), background .15s, opacity .15s;
+/* Единый transition для каждого интерактивного элемента */
+.btn-primary, .btn-outline, .btn-platform, .btn-open-maps,
+.btn-offer, .btn-copy, .btn-inline,
+.cal-nav, .tab-btn, .tab-item,
+.date-chip:not(.fully-booked), .slot-chip:not(.booked),
+.duration-chip, .counter-btn,
+.nav-card, .home-info-card, .home-contact,
+.contact-btn, .accordion-header, .more-item, .place-action,
+.offer-skip, .app-back-btn {
+  transition:
+    transform .14s cubic-bezier(.34, 1.56, .64, 1),
+    box-shadow .15s ease,
+    background .15s ease,
+    opacity .12s ease;
 }
 
-.date-chip:not(.fully-booked):active,
-.duration-chip:active,
-.contact-btn:active {
-  transform: scale(.94);
+/* Нажатие: пружинный отклик (scale + translateY создаёт ощущение утапливания) */
+.btn-primary:active         { transform: scale(.96) translateY(1px); box-shadow: 0 2px 6px rgba(76,200,112,0.16); }
+.btn-outline:active         { transform: scale(.97); background: var(--accent-light); }
+.btn-platform:active        { transform: scale(.97); opacity: .85; }
+.btn-open-maps:active       { transform: scale(.98); opacity: .86; }
+.btn-offer:active           { transform: scale(.96); }
+.btn-copy:active            { transform: scale(.88); }
+.btn-inline:active          { opacity: .55; }
+.cal-nav:active             { transform: scale(.86); background: var(--divider); }
+.tab-btn:active             { opacity: .6; }
+.tab-item:active            { transform: scale(.94); opacity: .8; }
+.date-chip:not(.fully-booked):active { transform: scale(.91); }
+.slot-chip:not(.booked):active       { transform: scale(.91); }
+.duration-chip:active       { transform: scale(.93); }
+.counter-btn:active         { transform: scale(.86); background: var(--accent-hover); }
+.nav-card:active            { transform: scale(.93); box-shadow: var(--shadow-sm); }
+.home-info-card:active      { transform: scale(.992) translateY(1px); opacity: .84; }
+.home-contact:active        { transform: scale(.98); opacity: .75; }
+.contact-btn:active         { background: rgba(180,220,155,0.09); }
+.accordion-header:active    { background: rgba(180,220,155,0.08); }
+.more-item:active           { transform: scale(.99) translateX(2px); background: rgba(180,220,155,0.09); }
+.place-action:active        { transform: scale(.78); opacity: .7; }
+.offer-skip:active          { transform: scale(.95); opacity: .55; }
+.app-back-btn:active        { transform: scale(.84); }
+
+/* Hover: отклик для мыши (Desktop / iPad trackpad) */
+@media (hover: hover) {
+  .btn-primary:hover      { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(76,200,112,0.44); }
+  .btn-outline:hover      { background: var(--accent-light); }
+  .btn-platform:hover     { opacity: .9; transform: translateY(-1px); }
+  .btn-open-maps:hover    { opacity: .9; }
+  .cal-nav:hover          { background: var(--accent-light); color: var(--accent); transform: scale(1.08); }
+  .tab-item:hover         { background: rgba(180,220,155,0.06); color: var(--tg-text); }
+  .more-item:hover        { background: rgba(180,220,155,0.05); }
+  .contact-btn:hover      { background: rgba(180,220,155,0.05); }
+  .accordion-header:hover { background: rgba(180,220,155,0.04); }
+  .place-action:hover     { color: var(--accent); transform: scale(1.18); }
+  .date-chip:not(.fully-booked):hover { background: var(--accent-light); border-color: var(--accent); }
+  .slot-chip:not(.booked):hover       { background: var(--accent-light); border-color: var(--accent); }
+  .duration-chip:hover    { background: var(--accent-light); border-color: var(--accent); }
 }
 
 .home-content {
