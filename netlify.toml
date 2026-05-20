@@ -1,0 +1,7 @@
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/tg-app/*"
+  to   = "/tg-app/:splat"
+  status = 200

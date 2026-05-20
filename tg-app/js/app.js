@@ -1258,6 +1258,12 @@ const actions = {
     localStorage.setItem('repka_onboarded', '1');
     haptic('light');
     router.reset();
+    const pending = sessionStorage.getItem('repka_pending_route');
+    if (pending) {
+      sessionStorage.removeItem('repka_pending_route');
+      const route = START_ROUTES[pending];
+      if (route) { router.navigate(route); return; }
+    }
     setTimeout(showOfferModal, 500);
   },
 
@@ -1303,14 +1309,38 @@ function setupEvents() {
 
 /* ═══ СТАРТ ═════════════════════════════════════════════════ */
 
+function getStartParam() {
+  return tg?.initDataUnsafe?.start_param
+    || new URLSearchParams(location.search).get('startapp')
+    || null;
+}
+
+const START_ROUTES = {
+  booking: 'booking',
+  book:    'booking',
+  sauna:   'sauna',
+  баня:    'sauna',
+  домик:   'booking',
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initTelegram();
   setupEvents();
+
+  const param = getStartParam();
+
   if (!localStorage.getItem('repka_onboarded')) {
     router.stack = [{ id: 'onboarding', params: {} }];
     router._render('onboarding', {}, 'fade');
+    // save param so startApp() can use it after onboarding
+    if (param) sessionStorage.setItem('repka_pending_route', param);
   } else {
     router.reset();
-    setTimeout(showOfferModal, 700);
+    const route = START_ROUTES[param];
+    if (route) {
+      router.navigate(route);
+    } else {
+      setTimeout(showOfferModal, 700);
+    }
   }
 });
