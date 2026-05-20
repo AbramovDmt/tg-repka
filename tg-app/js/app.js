@@ -976,6 +976,42 @@ function refreshBikesSummary() {
   setMainButton(`Забронировать · ${fmtPrice(calcBikes())}`, submitBikes, true);
 }
 
+/* ═══ ОФФЕР-МОДАЛКА ════════════════════════════════════════ */
+
+const OFFER_KEY = 'repka_offer_shown';
+
+function showOfferModal() {
+  if (localStorage.getItem(OFFER_KEY)) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'offer-modal';
+  modal.className = 'offer-overlay';
+  modal.innerHTML = `
+    <div class="offer-card">
+      <span class="offer-emoji">🎁</span>
+      <h2 class="offer-title">Скидка 10% на первое бронирование</h2>
+      <p class="offer-subtitle">Подпишитесь на бота — получите промокод сразу в чат</p>
+      <ul class="offer-bullets">
+        <li>Напомним о заезде за день</li>
+        <li>Первыми узнаёте о свободных датах</li>
+        <li>Эксклюзивные акции для подписчиков</li>
+      </ul>
+      <button class="btn-offer" data-action="acceptOffer">Получить скидку 10%</button>
+      <button class="offer-skip" data-action="closeOffer">Пропустить</button>
+    </div>`;
+
+  document.getElementById('app').appendChild(modal);
+  requestAnimationFrame(() => modal.classList.add('visible'));
+}
+
+function closeOfferModal() {
+  localStorage.setItem(OFFER_KEY, '1');
+  const modal = document.getElementById('offer-modal');
+  if (!modal) return;
+  modal.classList.remove('visible');
+  modal.addEventListener('transitionend', () => modal.remove(), { once: true });
+}
+
 /* ═══ ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ══════════════════════════════════ */
 
 const actions = {
@@ -1180,6 +1216,17 @@ const actions = {
     if (tg) tg.openLink(url);
     else window.open(url, '_blank', 'noopener');
   },
+
+  acceptOffer() {
+    closeOfferModal();
+    const url = 'https://t.me/repka_domik_bot?start=from_app';
+    if (tg) tg.openLink(url);
+    else window.open(url, '_blank', 'noopener');
+  },
+
+  closeOffer() {
+    closeOfferModal();
+  },
 };
 
 /* ═══ ДЕЛЕГИРОВАНИЕ КЛИКОВ ═══════════════════════════════════ */
@@ -1203,4 +1250,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initTelegram();
   setupEvents();
   router.reset(); // reset() кладёт home в стек, navigate('fade') — нет
+  setTimeout(showOfferModal, 700);
 });
