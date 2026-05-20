@@ -308,6 +308,39 @@ function renderSlotGrid(date) {
 
 const screens = {
 
+  /* ── Онбординг ─────────────────────────────────────────── */
+  onboarding: () => {
+    const user = tg?.initDataUnsafe?.user;
+    const name = user?.first_name || '';
+    const greeting = name ? `Привет, ${name}! 👋` : 'Привет! 👋';
+
+    return `
+      <div class="onboarding-screen">
+        <div class="onboarding-hero"></div>
+        <div class="onboarding-content">
+          <div class="onboarding-emoji">🏕️</div>
+          <h1 class="onboarding-title">${greeting}</h1>
+          <p class="onboarding-sub">Это приложение для бронирования A-frame домика в берёзовой роще у Канала&nbsp;им.&nbsp;Москвы.</p>
+          <div class="onboarding-features">
+            <div class="onboarding-feature">
+              <span class="of-icon">📅</span>
+              <span class="of-text">Выбрать даты и забронировать домик</span>
+            </div>
+            <div class="onboarding-feature">
+              <span class="of-icon">🔥</span>
+              <span class="of-text">Записаться в баню и заказать велосипеды</span>
+            </div>
+            <div class="onboarding-feature">
+              <span class="of-icon">🗺</span>
+              <span class="of-text">Найти интересные места рядом</span>
+            </div>
+          </div>
+          <button class="btn-primary onboarding-btn" data-action="startApp">Начать</button>
+          <p class="onboarding-hint">63 км от Москвы · Дмитровское шоссе</p>
+        </div>
+      </div>`;
+  },
+
   /* ── Главная ───────────────────────────────────────────── */
   home: () => `
     <div class="home-screen">
@@ -356,6 +389,10 @@ const screens = {
 
         <div class="home-contact" data-action="navigate" data-screen="contact">
           <span>✉️ Связаться с хозяином</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="home-contact home-share" data-action="share">
+          <span>🔗 Поделиться с другом</span>
           <span class="arrow">›</span>
         </div>
       </div>
@@ -1217,6 +1254,26 @@ const actions = {
     else window.open(url, '_blank', 'noopener');
   },
 
+  startApp() {
+    localStorage.setItem('repka_onboarded', '1');
+    haptic('light');
+    router.reset();
+    setTimeout(showOfferModal, 500);
+  },
+
+  share() {
+    haptic('light');
+    const url = 'https://t.me/repka_domik_bot';
+    const text = 'Уютный A-frame домик в лесу, 63 км от Москвы 🏕️';
+    if (tg) {
+      tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
+    } else if (navigator.share) {
+      navigator.share({ title: 'A-frame домик', text, url });
+    } else {
+      navigator.clipboard?.writeText(`${text}\n${url}`);
+    }
+  },
+
   acceptOffer() {
     closeOfferModal();
     const url = 'https://t.me/repka_domik_bot?start=from_app';
@@ -1249,6 +1306,11 @@ function setupEvents() {
 document.addEventListener('DOMContentLoaded', () => {
   initTelegram();
   setupEvents();
-  router.reset(); // reset() кладёт home в стек, navigate('fade') — нет
-  setTimeout(showOfferModal, 700);
+  if (!localStorage.getItem('repka_onboarded')) {
+    router.stack = [{ id: 'onboarding', params: {} }];
+    router._render('onboarding', {}, 'fade');
+  } else {
+    router.reset();
+    setTimeout(showOfferModal, 700);
+  }
 });

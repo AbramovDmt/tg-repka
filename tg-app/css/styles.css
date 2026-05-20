@@ -1487,6 +1487,102 @@ textarea, input { font-family: var(--font); }
 .amenity-label { font-size: 12px; font-weight: 500; color: var(--tg-hint); }
 
 /* ═══════════════════════════════════════════════════════════
+   ОНБОРДИНГ
+   ═══════════════════════════════════════════════════════════ */
+
+.onboarding-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn .35s ease;
+}
+
+.onboarding-hero {
+  height: 220px;
+  flex-shrink: 0;
+  background:
+    radial-gradient(ellipse at 35% 85%, rgba(160,90,15,.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 90%, rgba(180,100,20,.38) 0%, transparent 45%),
+    linear-gradient(175deg, #0a1a0c 0%, #162a18 30%, #1e4025 55%, #6a4010 80%, #b07020 100%);
+  position: relative;
+}
+
+.onboarding-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--tg-bg));
+}
+
+.onboarding-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 var(--sp-lg) var(--sp-xl);
+  text-align: center;
+}
+
+.onboarding-emoji {
+  font-size: 56px;
+  margin-top: -28px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.onboarding-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--tg-text);
+  margin: 0 0 10px;
+  line-height: 1.25;
+}
+
+.onboarding-sub {
+  font-size: 15px;
+  color: var(--tg-hint);
+  line-height: 1.55;
+  margin: 0 0 24px;
+  max-width: 300px;
+}
+
+.onboarding-features {
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.onboarding-feature {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--divider);
+  text-align: left;
+}
+.onboarding-feature:last-child { border-bottom: none; }
+
+.of-icon { font-size: 22px; flex-shrink: 0; }
+.of-text { font-size: 15px; color: var(--tg-text); line-height: 1.4; }
+
+.onboarding-btn { width: 100%; }
+
+.onboarding-hint {
+  font-size: 12px;
+  color: var(--tg-hint);
+  margin-top: 16px;
+}
+
+/* Кнопка «Поделиться» на главной */
+.home-share { margin-top: 4px; }
+
+/* ═══════════════════════════════════════════════════════════
    ОФФЕР-МОДАЛКА
    ═══════════════════════════════════════════════════════════ */
 
