@@ -248,11 +248,11 @@ textarea, input { font-family: var(--font); }
 }
 
 .section-title {
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--amber);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tg-hint);
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.8px;
   padding: 14px var(--sp-md) 8px;
 }
 
@@ -419,14 +419,14 @@ textarea, input { font-family: var(--font); }
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--accent-light);
-  color: var(--accent);
+  background: rgba(76,200,112,0.12);
+  color: #7AE898;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 10px 16px;
   border-radius: var(--r-xl);
   margin-bottom: var(--sp-md);
-  border: 1px solid rgba(76,200,112,0.20);
+  border: 1px solid rgba(76,200,112,0.28);
   letter-spacing: 0.2px;
 }
 
@@ -474,33 +474,39 @@ textarea, input { font-family: var(--font); }
   box-shadow: var(--shadow-sm);
 }
 
-/* Индивидуальные градиенты по теме */
-.nav-card[data-screen="house"]        { background: linear-gradient(150deg, #0E2A14 0%, #1C5A34 55%, #2E8050 100%); }
-.nav-card[data-screen="booking"]      { background: linear-gradient(150deg, #2A1008 0%, #703018 55%, #B05028 100%); }
-.nav-card[data-screen="sauna"]        { background: linear-gradient(150deg, #220804 0%, #641A0A 50%, #B03418 100%); }
-.nav-card[data-screen="bikes"]        { background: linear-gradient(150deg, #081A28 0%, #104A68 55%, #1A7898 100%); }
-.nav-card[data-screen="nearby"]       { background: linear-gradient(150deg, #0C1E10 0%, #1C4A22 55%, #306838 100%); }
-.nav-card[data-screen="instructions"] { background: linear-gradient(150deg, #1C1208 0%, #4E3018 55%, #785028 100%); }
-.nav-card[data-screen="contact"]      { background: linear-gradient(150deg, #120E08 0%, #3A2414 55%, #603C24 100%); }
+/* Все карточки — единый тёмный тон, акцент через свечение иконки */
+.nav-card[data-screen="house"]        { background: linear-gradient(150deg, #162418 0%, #1E3020 100%); }
+.nav-card[data-screen="booking"]      { background: linear-gradient(150deg, #1E2016 0%, #2A2C18 100%); }
+.nav-card[data-screen="sauna"]        { background: linear-gradient(150deg, #201614 0%, #2C2018 100%); }
+.nav-card[data-screen="bikes"]        { background: linear-gradient(150deg, #141E22 0%, #1C2C30 100%); }
+.nav-card[data-screen="nearby"]       { background: linear-gradient(150deg, #162418 0%, #1C2E1E 100%); }
+.nav-card[data-screen="instructions"] { background: linear-gradient(150deg, #1C1C16 0%, #282818 100%); }
+.nav-card[data-screen="contact"]      { background: linear-gradient(150deg, #181618 0%, #24201E 100%); }
 
-/* Все карточки — белый текст */
+/* Цветные свечения иконок по теме раздела */
+.nav-card[data-screen="house"] .nav-card-icon        { filter: drop-shadow(0 0 10px rgba(76,200,112,0.55)); }
+.nav-card[data-screen="booking"] .nav-card-icon      { filter: drop-shadow(0 0 10px rgba(224,180,80,0.55)); }
+.nav-card[data-screen="sauna"] .nav-card-icon        { filter: drop-shadow(0 0 10px rgba(224,90,32,0.60)); }
+.nav-card[data-screen="bikes"] .nav-card-icon        { filter: drop-shadow(0 0 10px rgba(32,168,192,0.55)); }
+.nav-card[data-screen="nearby"] .nav-card-icon       { filter: drop-shadow(0 0 10px rgba(122,200,64,0.55)); }
+.nav-card[data-screen="instructions"] .nav-card-icon { filter: drop-shadow(0 0 10px rgba(200,160,80,0.50)); }
+.nav-card[data-screen="contact"] .nav-card-icon      { filter: drop-shadow(0 0 10px rgba(160,120,200,0.50)); }
+
 .nav-card-icon {
-  font-size: 32px;
+  font-size: 34px;
   line-height: 1;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
 
 .nav-card-label {
   font-size: 11px;
   font-weight: 700;
-  color: rgba(255,255,255,.95);
+  color: rgba(255,255,255,.90);
   text-align: center;
-  letter-spacing: 0.3px;
-  text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  letter-spacing: 0.2px;
 }
 
-/* Убираем старый .accent класс — теперь все карточки цветные */
-.nav-card.accent { background: linear-gradient(150deg, #2A1008 0%, #703018 55%, #B05028 100%); }
+/* Убираем старый .accent класс */
+.nav-card.accent { background: linear-gradient(150deg, #1E2016 0%, #2A2C18 100%); }
 
 .home-contact {
   display: flex;

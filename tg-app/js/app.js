@@ -19,36 +19,38 @@ const state = {
 const tg = window.Telegram?.WebApp || null;
 
 function initTelegram() {
-  if (!tg) {
-    // Вне Telegram — тема по системным настройкам
-    const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.body.classList.toggle('dark', dark);
-    return;
-  }
+  forceDarkPalette();
+  document.body.classList.add('dark');
+
+  if (!tg) return;
 
   tg.ready();
   tg.expand();
-
-  applyTelegramTheme();
-  tg.onEvent('themeChanged', applyTelegramTheme);
+  tg.onEvent('themeChanged', forceDarkPalette);
   tg.BackButton.onClick(() => router.back());
 }
 
-function applyTelegramTheme() {
-  if (!tg) return;
-  document.body.classList.toggle('dark', tg.colorScheme === 'dark');
-
-  const p = tg.themeParams;
+function forceDarkPalette() {
   const r = document.documentElement;
-  const set = (v, val) => val && r.style.setProperty(v, val);
-
-  set('--tg-bg',           p.bg_color);
-  set('--tg-secondary-bg', p.secondary_bg_color);
-  set('--tg-text',         p.text_color);
-  set('--tg-hint',         p.hint_color);
-  set('--tg-link',         p.link_color);
-  set('--tg-button',       p.button_color);
-  set('--tg-button-text',  p.button_text_color);
+  const s = (v, val) => r.style.setProperty(v, val);
+  s('--tg-bg',           '#0D1B0F');
+  s('--tg-secondary-bg', '#132016');
+  s('--tg-text',         '#E8F0DF');
+  s('--tg-hint',         '#7A9470');
+  s('--tg-link',         '#6AD888');
+  s('--tg-button',       '#4CC870');
+  s('--tg-button-text',  '#0A1A0C');
+  s('--card-bg',         '#162418');
+  s('--divider',         'rgba(180,220,155,0.10)');
+  s('--accent',          '#4CC870');
+  s('--accent-hover',    '#3AAA5C');
+  s('--accent-light',    'rgba(76,200,112,0.16)');
+  s('--accent-text',     '#0A1A0C');
+  s('--amber',           '#E09040');
+  s('--amber-light',     'rgba(224,144,64,0.14)');
+  s('--shadow-sm',       '0 1px 6px rgba(0,0,0,0.50)');
+  s('--shadow-md',       '0 4px 20px rgba(0,0,0,0.60)');
+  s('--shadow-lg',       '0 8px 32px rgba(0,0,0,0.72)');
 }
 
 /* MainButton — единственная нижняя кнопка Telegram */
