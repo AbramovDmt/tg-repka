@@ -372,16 +372,17 @@ const screens = {
           <h1 class="onboarding-title">${greeting}</h1>
           <p class="onboarding-sub">Это приложение для бронирования A-frame домика в берёзовой роще у Канала&nbsp;им.&nbsp;Москвы.</p>
           <div class="onboarding-features">
+            <p class="of-caption">Здесь можно:</p>
             <div class="onboarding-feature">
-              <span class="of-icon">📅</span>
+              <span class="of-check">✓</span>
               <span class="of-text">Выбрать даты и забронировать домик</span>
             </div>
             <div class="onboarding-feature">
-              <span class="of-icon">🔥</span>
-              <span class="of-text">Записаться в баню и заказать велосипеды</span>
+              <span class="of-check">✓</span>
+              <span class="of-text">Забронировать баню и велосипеды</span>
             </div>
             <div class="onboarding-feature">
-              <span class="of-icon">🗺</span>
+              <span class="of-check">✓</span>
               <span class="of-text">Найти интересные места рядом</span>
             </div>
           </div>
