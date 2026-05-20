@@ -16,8 +16,8 @@ const APP_DATA = {
     capacity:    4,      // человек (до 6 с баней)
     area:        48,     // м²
     floors:      2,
-    priceWeekday: 5000,  // ₽/ночь (пн–чт)
-    priceWeekend: 7000,  // ₽/ночь (пт–вс)
+    priceWeekday: 8000,  // ₽/ночь (пн–чт)
+    priceWeekend: 8000,  // ₽/ночь (пт–вс)
     cleaning:    1500,   // ₽ единоразово
     deposit:     5000,   // ₽ залог (10 000 с животными)
     minNights:   2,
