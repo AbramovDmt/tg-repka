@@ -858,12 +858,7 @@ const screens = {
       <div class="upsell-screen">
         <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
         <div class="screen-content">
-          <div class="upsell-confirm">
-            <span class="upsell-check">✓</span>
-            <span>Заявка на домик отправлена</span>
-          </div>
-
-          <p class="upsell-invite">Хотите добавить что-то к поездке?</p>
+          <p class="upsell-invite">Что добавим к поездке?</p>
 
           <div class="upsell-card${needsSauna ? ' required' : ''}" data-action="navigate" data-screen="sauna">
             <span class="upsell-icon">🛁</span>

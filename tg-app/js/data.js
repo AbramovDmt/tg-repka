@@ -25,7 +25,6 @@ const APP_DATA = {
     checkOut:    '12:00',
 
     amenities: [
-      { icon: '🛁', label: 'Баня-домик' },
       { icon: '🔥', label: 'Мангал+казан' },
       { icon: '📶', label: 'Wi-Fi' },
       { icon: '🛏', label: 'Бельё и полотенца' },
