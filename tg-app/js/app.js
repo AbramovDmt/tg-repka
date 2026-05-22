@@ -19,38 +19,21 @@ const state = {
 const tg = window.Telegram?.WebApp || null;
 
 function initTelegram() {
-  forceDarkPalette();
-  document.body.classList.add('dark');
-
-  if (!tg) return;
-
-  tg.ready();
-  tg.expand();
-  tg.onEvent('themeChanged', forceDarkPalette);
-  tg.BackButton.onClick(() => router.back());
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    applyTheme(tg.colorScheme);
+    tg.onEvent('themeChanged', () => applyTheme(tg.colorScheme));
+    tg.BackButton.onClick(() => router.back());
+  } else {
+    applyTheme('light');
+  }
 }
 
-function forceDarkPalette() {
-  const r = document.documentElement;
-  const s = (v, val) => r.style.setProperty(v, val);
-  s('--tg-bg',           '#0D1B0F');
-  s('--tg-secondary-bg', '#132016');
-  s('--tg-text',         '#E8F0DF');
-  s('--tg-hint',         '#7A9470');
-  s('--tg-link',         '#6AD888');
-  s('--tg-button',       '#4CC870');
-  s('--tg-button-text',  '#0A1A0C');
-  s('--card-bg',         '#162418');
-  s('--divider',         'rgba(180,220,155,0.10)');
-  s('--accent',          '#4CC870');
-  s('--accent-hover',    '#3AAA5C');
-  s('--accent-light',    'rgba(76,200,112,0.16)');
-  s('--accent-text',     '#0A1A0C');
-  s('--amber',           '#E09040');
-  s('--amber-light',     'rgba(224,144,64,0.14)');
-  s('--shadow-sm',       '0 1px 6px rgba(0,0,0,0.50)');
-  s('--shadow-md',       '0 4px 20px rgba(0,0,0,0.60)');
-  s('--shadow-lg',       '0 8px 32px rgba(0,0,0,0.72)');
+function applyTheme(scheme) {
+  document.body.classList.toggle('dark', scheme === 'dark');
+  const meta = document.getElementById('meta-theme');
+  if (meta) meta.content = scheme === 'dark' ? '#0D1B0F' : '#F7F4EF';
 }
 
 /* MainButton — единственная нижняя кнопка Telegram */
@@ -206,7 +189,7 @@ function isWeekendDate(ds) {
 }
 
 function calcBooking() {
-  const { checkIn, checkOut } = state.booking;
+  const { checkIn, checkOut, guests } = state.booking;
   if (!checkIn || !checkOut) return null;
 
   const from = new Date(checkIn), to = new Date(checkOut);
@@ -221,7 +204,10 @@ function calcBooking() {
     nightsTotal += isWeekendDate(ds) ? APP_DATA.house.priceWeekend : APP_DATA.house.priceWeekday;
   }
   const cleaning = APP_DATA.house.cleaning;
-  return { nights, nightsTotal, cleaning, total: nightsTotal + cleaning };
+  const saunaTotal = guests > APP_DATA.house.capacity
+    ? nights * APP_DATA.sauna.minDuration * APP_DATA.sauna.pricePerHour
+    : 0;
+  return { nights, nightsTotal, cleaning, saunaTotal, total: nightsTotal + cleaning + saunaTotal };
 }
 
 function calcSauna() {
@@ -420,7 +406,7 @@ const screens = {
           </div>
           <div class="home-info-row">
             <span class="home-info-label">Гости</span>
-            <span class="home-info-value">до ${d.capacity} человек</span>
+            <span class="home-info-value">до ${APP_DATA.sauna.capacity} человек</span>
           </div>
           <div class="home-info-row">
             <span class="home-info-label">Площадь</span>
@@ -432,6 +418,10 @@ const screens = {
           </div>
           <div class="home-info-cta"><span>Подробнее о домике</span><span>›</span></div>
         </div>
+
+        <button class="btn-primary home-book-btn" data-action="navigate" data-screen="booking">
+          Забронировать
+        </button>
 
         <div class="home-contact" data-action="share">
           <span>🔗 Поделиться с другом</span>
@@ -472,7 +462,7 @@ const screens = {
           <div class="house-title-row">
             <div>
               <h2 class="house-name">${d.name}</h2>
-              <p class="house-meta">${d.area} м² · ${d.floors} этажа · до ${d.capacity} гостей</p>
+              <p class="house-meta">${d.area} м² · ${d.floors} этажа · до ${APP_DATA.sauna.capacity} гостей</p>
             </div>
             <div class="price-badge">от ${fmtPrice(d.priceWeekday)}<span class="per-night">/ночь</span></div>
           </div>
@@ -506,11 +496,6 @@ const screens = {
           </div>
         </div>
 
-        <div class="sticky-bottom">
-          <button class="btn-primary" data-action="navigate" data-screen="booking">
-            Проверить даты
-          </button>
-        </div>
       </div>`;
   },
 
@@ -546,6 +531,11 @@ const screens = {
           <span>Итого</span>
           <span>${fmtPrice(price.total)}</span>
         </div>
+        ${price.saunaTotal ? `
+        <div class="price-row">
+          <span>🛁 Баня · мин. ${APP_DATA.sauna.minDuration} ч/день</span>
+          <span>${fmtPrice(price.saunaTotal)}</span>
+        </div>` : ''}
       </div>` : '';
 
     return `
@@ -566,6 +556,10 @@ const screens = {
                 <button class="counter-btn" data-action="changeGuests" data-delta="1">+</button>
               </div>
             </div>
+            <div class="sauna-guests-hint" id="sauna-guests-hint"${guests > APP_DATA.house.capacity ? '' : ' style="display:none"'}>
+              🛁 При 5–6 гостях нужна аренда бани — там +2 места.
+              <span class="sauna-hint-link" data-action="navigate" data-screen="sauna">Открыть баню →</span>
+            </div>
           </div>
 
           ${priceBlock}
@@ -580,6 +574,12 @@ const screens = {
             <span class="cancel-icon">ℹ️</span>
             <span>Отмена за 3 дня и более — бесплатно. Позже — 50% стоимости.</span>
           </div>
+
+          <button class="btn-primary" id="booking-submit-btn"
+            data-action="submitBooking"
+            ${checkIn && checkOut ? '' : 'disabled'}>
+            ${price ? `Отправить заявку · ${fmtPrice(price.total)}` : 'Выберите даты'}
+          </button>
 
           <div class="platform-section">
             <p class="platform-label">Или забронировать через площадку:</p>
@@ -851,6 +851,46 @@ const screens = {
       </div>
     </div>`,
 
+  /* ── Допы после бронирования ───────────────────────────── */
+  upsell: () => {
+    const needsSauna = state.booking.guests > APP_DATA.house.capacity;
+    return `
+      <div class="upsell-screen">
+        <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
+        <div class="screen-content">
+          <div class="upsell-confirm">
+            <span class="upsell-check">✓</span>
+            <span>Заявка на домик отправлена</span>
+          </div>
+
+          <p class="upsell-invite">Хотите добавить что-то к поездке?</p>
+
+          <div class="upsell-card${needsSauna ? ' required' : ''}" data-action="navigate" data-screen="sauna">
+            <span class="upsell-icon">🛁</span>
+            <div class="upsell-body">
+              <div class="upsell-name">Баня</div>
+              <div class="upsell-meta">${APP_DATA.sauna.pricePerHour.toLocaleString('ru-RU')} ₽/час · мин. 2 ч · до ${APP_DATA.sauna.capacity} чел.</div>
+              ${needsSauna ? '<div class="upsell-tag">Нужна для вашей группы</div>' : ''}
+            </div>
+            <span class="upsell-arrow">›</span>
+          </div>
+
+          <div class="upsell-card" data-action="navigate" data-screen="bikes">
+            <span class="upsell-icon">🚴</span>
+            <div class="upsell-body">
+              <div class="upsell-name">Велосипеды</div>
+              <div class="upsell-meta">${APP_DATA.bikes.priceDay.toLocaleString('ru-RU')} ₽/день · ${APP_DATA.bikes.available} велика</div>
+            </div>
+            <span class="upsell-arrow">›</span>
+          </div>
+
+          <button class="btn-outline upsell-skip" data-action="navigate" data-screen="success" data-type="booking">
+            Готово, на главную
+          </button>
+        </div>
+      </div>`;
+  },
+
   /* ── Экран успеха ──────────────────────────────────────── */
   success: (params = {}) => {
     const map = {
@@ -898,7 +938,7 @@ function setupScreenButtons(screenId, params) {
       break;
 
     case 'house':
-      hideMainButton();
+      setMainButton('Забронировать', () => router.navigate('booking'));
       break;
 
     case 'booking': {
@@ -918,6 +958,10 @@ function setupScreenButtons(screenId, params) {
 
     case 'bikes':
       setMainButton(`Забронировать · ${fmtPrice(calcBikes())}`, submitBikes, true);
+      break;
+
+    case 'upsell':
+      hideMainButton();
       break;
 
     case 'success':
@@ -959,7 +1003,7 @@ function submitBooking() {
   if (ta) state.booking.comment = ta.value;
   hapticNotify('success');
   router.stack = [{ id: 'home', params: {} }];
-  router.navigate('success', { type: 'booking' });
+  router.navigate('upsell');
 }
 
 function submitSauna() {
@@ -1032,6 +1076,11 @@ function refreshBookingPrice() {
         <div class="price-row total">
           <span>Итого</span><span>${fmtPrice(price.total)}</span>
         </div>
+        ${price.saunaTotal ? `
+        <div class="price-row">
+          <span>🛁 Баня · мин. ${APP_DATA.sauna.minDuration} ч/день</span>
+          <span>${fmtPrice(price.saunaTotal)}</span>
+        </div>` : ''}
       </div>`;
     if (el) { el.outerHTML = html; }
     else {
@@ -1045,6 +1094,8 @@ function refreshBookingPrice() {
   const ok  = !!(checkIn && checkOut);
   const txt = price ? `Отправить заявку · ${fmtPrice(price.total)}` : 'Выберите даты';
   setMainButton(txt, submitBooking, ok);
+  const btn = document.getElementById('booking-submit-btn');
+  if (btn) { btn.textContent = txt; btn.disabled = !ok; }
 }
 
 function refreshSaunaSlots() {
@@ -1131,9 +1182,13 @@ function closeOfferModal() {
 /* ═══ ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ══════════════════════════════════ */
 
 const actions = {
-  navigate({ screen }) {
+  navigate({ screen, action, ...params }) {
     haptic('light');
-    router.navigate(screen);
+    router.navigate(screen, params);
+  },
+
+  submitBooking() {
+    submitBooking();
   },
 
   goHome() {
@@ -1197,13 +1252,16 @@ const actions = {
   },
 
   changeGuests({ delta }) {
-    const max = APP_DATA.house.capacity;
+    const max = APP_DATA.sauna.capacity;
     const nv  = Math.max(1, Math.min(max, state.booking.guests + parseInt(delta)));
     if (nv === state.booking.guests) return;
     state.booking.guests = nv;
     haptic('light');
     const el = document.querySelector('.counter-value');
     if (el) el.textContent = `${nv} ${nv===1?'человек':nv<5?'человека':'человек'}`;
+    const hint = document.getElementById('sauna-guests-hint');
+    if (hint) hint.style.display = nv > APP_DATA.house.capacity ? '' : 'none';
+    if (state.booking.checkIn && state.booking.checkOut) refreshBookingPrice();
   },
 
   /* Баня: выбор даты */
