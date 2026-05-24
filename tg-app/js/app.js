@@ -625,8 +625,8 @@ const screens = {
                 <div class="sbc-dates">${dateLabel(checkIn)} — ${dateLabel(checkOut)} · ${nights} ${nightLabel(nights)}</div>
               </div>
               <div class="sbc-price-row">
-                <div>
-                  <div class="sbc-price-name">🛁 Баня · весь период</div>
+                <div class="sbc-price-left">
+                  <div class="sbc-price-name">🛁 Баня — весь период</div>
                   <div class="sbc-price-meta">${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки × ${nights} ${nightLabel(nights)}</div>
                 </div>
                 <div class="sbc-price-total">${fmtPrice(saunaPrice)}</div>
@@ -646,9 +646,9 @@ const screens = {
                    Добавить к брони · ${fmtPrice(saunaPrice)}
                  </button>`}
 
-            <div class="sauna-standalone-hint" data-action="switchToStandaloneMode">
-              Нужна только баня без домика — выбрать по часам →
-            </div>
+            <button class="btn-outline" data-action="switchToStandaloneMode">
+              Только баня без домика — по часам
+            </button>
           </div>
           <div class="screen-bottom-space"></div>
         </div>`;

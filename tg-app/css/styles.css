@@ -1801,6 +1801,11 @@ body.dark .amenity-item {
   margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid var(--tg-divider);
+  gap: 12px;
+}
+.sbc-price-left {
+  flex: 1;
+  min-width: 0;
 }
 .sbc-price-name {
   font-size: 14px;
@@ -1817,7 +1822,7 @@ body.dark .amenity-item {
   font-weight: 700;
   color: var(--tg-text);
   white-space: nowrap;
-  margin-left: 12px;
+  flex-shrink: 0;
 }
 .sauna-added-notice {
   background: var(--tg-secondary-bg);
@@ -1828,15 +1833,6 @@ body.dark .amenity-item {
   color: #4CAF50;
   text-align: center;
   margin-bottom: 10px;
-}
-.sauna-standalone-hint {
-  text-align: center;
-  font-size: 13px;
-  color: var(--tg-hint);
-  padding: 16px 0 4px;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 .remove-item {
   font-size: 11px;
