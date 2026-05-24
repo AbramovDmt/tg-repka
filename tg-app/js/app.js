@@ -13,6 +13,7 @@ const state = {
   nearby:       { tab: 'Природа' },
   success:      { type: 'booking' },
   bookingFlow:  false, // true when sauna/bikes upsell is part of a house booking
+  currentOrder: { house: null, sauna: null, bikes: null },
 };
 
 /* ═══ TELEGRAM SDK ══════════════════════════════════════════ */
@@ -932,33 +933,84 @@ const screens = {
   success: (params = {}) => {
     const map = {
       booking: {
-        icon: '🏠',
+        icon:  '🏠',
         title: 'Заявка отправлена!',
-        sub:   'В ближайший час хозяин свяжется с вами для подтверждения.',
-        note:  'Уведомление придёт в Telegram',
+        note:  'В ближайший час хозяин свяжется с вами. Уведомление придёт в Telegram.',
       },
       sauna: {
-        icon: '🔥',
-        title: 'Баня забронирована!',
-        sub:   `${state.sauna.date ? dateLabel(state.sauna.date) : ''} в ${state.sauna.slot || '—'} — ждём вас!`,
+        icon:  '🔥',
+        title: 'Заявка отправлена!',
         note:  'Домик в эту заявку не включён. Подтверждение придёт в Telegram.',
       },
       bikes: {
-        icon: '🚴',
+        icon:  '🚴',
         title: 'Велосипеды заказаны!',
-        sub:   'Заберите у хозяина при заезде.',
-        note:  'Напоминание придёт за день до приезда',
+        note:  'Заберите у хозяина при заезде. Напоминание придёт за день.',
       },
     };
 
     const t = map[params.type] || map.booking;
+    const { house, sauna, bikes } = state.currentOrder || {};
+
+    // Build order items
+    const items = [];
+    if (house) {
+      const g = house.guests;
+      const gLabel = g === 1 ? 'человек' : g < 5 ? 'человека' : 'человек';
+      items.push({
+        icon:  '🏠',
+        name:  'Домик',
+        meta:  `${dateLabel(house.checkIn)} – ${dateLabel(house.checkOut)} · ${house.nights} ${nightLabel(house.nights)} · ${g} ${gLabel}`,
+        price: fmtPrice(house.price),
+      });
+    }
+    if (sauna) {
+      const [h] = sauna.slot.split(':').map(Number);
+      const endT = `${pad(Math.min(h + sauna.duration, 22))}:00`;
+      items.push({
+        icon:  '🛁',
+        name:  'Баня',
+        meta:  `${dateLabel(sauna.date)} · ${sauna.slot}–${endT}`,
+        price: house?.saunaIncluded ? 'включена' : fmtPrice(sauna.price),
+      });
+    }
+    if (bikes) {
+      items.push({
+        icon:  '🚴',
+        name:  'Велосипеды',
+        meta:  `${bikes.count} шт. · весь день`,
+        price: fmtPrice(bikes.price),
+      });
+    }
+
+    const saunaExtra = sauna && !house?.saunaIncluded ? sauna.price : 0;
+    const total = (house?.price || 0) + saunaExtra + (bikes?.price || 0);
+
+    const orderCard = items.length ? `
+      <div class="order-card">
+        <div class="order-card-title">Что забронировано</div>
+        ${items.map(it => `
+          <div class="order-item">
+            <span class="order-item-icon">${it.icon}</span>
+            <div class="order-item-body">
+              <div class="order-item-name">${it.name}</div>
+              <div class="order-item-meta">${it.meta}</div>
+            </div>
+            <span class="order-item-price">${it.price}</span>
+          </div>`).join('')}
+        ${items.length > 1 ? `
+        <div class="order-total-row">
+          <span>Итого</span>
+          <span>${fmtPrice(total)}</span>
+        </div>` : ''}
+      </div>` : '';
 
     return `
       <div class="success-screen">
         <div class="success-icon">${t.icon}</div>
         <div class="success-checkmark">✓</div>
         <h2 class="success-title">${t.title}</h2>
-        <p class="success-subtitle">${t.sub}</p>
+        ${orderCard}
         <p class="success-note">${t.note}</p>
         <button class="btn-primary success-btn" data-action="goHome">На главную</button>
       </div>`;
@@ -1039,6 +1091,19 @@ function setupCommentSync() {
 function submitBooking() {
   const ta = document.getElementById('booking-comment');
   if (ta) state.booking.comment = ta.value;
+  const price = calcBooking();
+  state.currentOrder = {
+    house: price ? {
+      checkIn:      state.booking.checkIn,
+      checkOut:     state.booking.checkOut,
+      nights:       price.nights,
+      guests:       state.booking.guests,
+      price:        price.total,
+      saunaIncluded: price.saunaTotal > 0,
+    } : null,
+    sauna: null,
+    bikes: null,
+  };
   state.bookingFlow = true;
   hapticNotify('success');
   router.stack = [{ id: 'home', params: {} }];
@@ -1047,6 +1112,17 @@ function submitBooking() {
 
 function submitSauna() {
   if (!state.sauna.date || !state.sauna.slot) return;
+  const saunaData = {
+    date:     state.sauna.date,
+    slot:     state.sauna.slot,
+    duration: state.sauna.duration,
+    price:    calcSauna(),
+  };
+  if (state.bookingFlow) {
+    state.currentOrder.sauna = saunaData;
+  } else {
+    state.currentOrder = { house: null, sauna: saunaData, bikes: null };
+  }
   hapticNotify('success');
   router.stack = [{ id: 'home', params: {} }];
   router.navigate('upsellBikes');
@@ -1054,7 +1130,13 @@ function submitSauna() {
 
 function submitBikes() {
   hapticNotify('success');
-  const type = state.bookingFlow ? 'booking' : 'bikes';
+  const type = state.bookingFlow ? 'booking' : (state.currentOrder.sauna ? 'sauna' : 'bikes');
+  const bikesData = { count: state.bikes.count, price: calcBikes() };
+  if (state.bookingFlow || state.currentOrder.sauna) {
+    state.currentOrder.bikes = bikesData;
+  } else {
+    state.currentOrder = { house: null, sauna: null, bikes: bikesData };
+  }
   state.bookingFlow = false;
   router.stack = [{ id: 'home', params: {} }];
   router.navigate('success', { type });

@@ -1701,10 +1701,56 @@ body.dark .amenity-item {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--sp-xl) var(--sp-lg);
+  padding: var(--sp-xl) var(--sp-lg) calc(var(--sp-xl) + 60px);
   text-align: center;
   gap: var(--sp-md);
   animation: fadeIn .3s ease;
+}
+
+.order-card {
+  width: 100%;
+  background: var(--tg-bg-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  text-align: left;
+  margin: var(--sp-xs) 0;
+}
+.order-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--tg-hint);
+  padding: var(--sp-sm) var(--sp-md) 0;
+}
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  border-bottom: 1px solid var(--tg-divider);
+}
+.order-item:last-of-type { border-bottom: none; }
+.order-item-icon { font-size: 20px; flex-shrink: 0; }
+.order-item-body { flex: 1; min-width: 0; }
+.order-item-name { font-size: 14px; font-weight: 600; color: var(--tg-text); }
+.order-item-meta { font-size: 12px; color: var(--tg-hint); margin-top: 1px; }
+.order-item-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tg-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--sp-sm) var(--sp-md);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tg-text);
+  border-top: 1px solid var(--tg-divider);
+  background: var(--tg-bg);
 }
 
 .success-icon { font-size: 64px; }
