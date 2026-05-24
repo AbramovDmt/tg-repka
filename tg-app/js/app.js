@@ -205,11 +205,10 @@ function calcBooking() {
     const ds = fmtDate(d.getFullYear(), d.getMonth()+1, d.getDate());
     nightsTotal += isWeekendDate(ds) ? APP_DATA.house.priceWeekend : APP_DATA.house.priceWeekday;
   }
-  const cleaning = APP_DATA.house.cleaning;
   const saunaTotal = guests > APP_DATA.house.capacity
     ? nights * APP_DATA.sauna.pricePerDay
     : 0;
-  return { nights, nightsTotal, cleaning, saunaTotal, total: nightsTotal + cleaning + saunaTotal };
+  return { nights, nightsTotal, saunaTotal, total: nightsTotal + saunaTotal };
 }
 
 function calcSauna() {
@@ -528,10 +527,6 @@ const screens = {
         <div class="price-row">
           <span>${price.nights} ${nightLabel(price.nights)} × стоимость</span>
           <span>${fmtPrice(price.nightsTotal)}</span>
-        </div>
-        <div class="price-row">
-          <span>Уборка</span>
-          <span>${fmtPrice(price.cleaning)}</span>
         </div>
         ${price.saunaTotal ? `
         <div class="price-row">
@@ -1371,9 +1366,6 @@ function refreshBookingPrice() {
         <div class="price-row">
           <span>${price.nights} ${nightLabel(price.nights)} × стоимость</span>
           <span>${fmtPrice(price.nightsTotal)}</span>
-        </div>
-        <div class="price-row">
-          <span>Уборка</span><span>${fmtPrice(price.cleaning)}</span>
         </div>
         ${price.saunaTotal ? `
         <div class="price-row">
