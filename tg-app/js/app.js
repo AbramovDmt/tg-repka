@@ -571,9 +571,13 @@ const screens = {
           ${priceBlock}
 
           <div class="section-card">
-            <label class="comment-label">Комментарий <span class="optional">(необязательно)</span></label>
+            <label class="comment-label">Вопрос или пожелание хозяину <span class="optional">(необязательно)</span></label>
             <textarea class="comment-input" id="booking-comment"
-              placeholder="Есть питомец / приедем поздно / нужна кроватка…">${comment}</textarea>
+              placeholder="Позвоните за час до заезда / приедем поздно / нужна кроватка…">${comment}</textarea>
+            <div class="pets-hint">
+              <span class="pets-hint-icon">🐾</span>
+              <span>Едете с питомцем? Напишите об этом — обсуждается индивидуально. Залог с животными 10 000 ₽, на участке не выгуливать.</span>
+            </div>
           </div>
 
           <div class="cancellation-note">
