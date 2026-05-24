@@ -1794,6 +1794,31 @@ body.dark .amenity-item {
   color: var(--tg-hint);
   margin-top: 6px;
 }
+.sbc-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--tg-divider);
+}
+.sbc-price-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tg-text);
+}
+.sbc-price-meta {
+  font-size: 12px;
+  color: var(--tg-hint);
+  margin-top: 2px;
+}
+.sbc-price-total {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--tg-text);
+  white-space: nowrap;
+  margin-left: 12px;
+}
 .sauna-added-notice {
   background: var(--tg-secondary-bg);
   border-radius: var(--radius-md);

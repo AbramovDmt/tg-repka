@@ -623,11 +623,13 @@ const screens = {
                 <div class="sbc-label">К вашей брони домика</div>
                 <div class="sbc-dates">${dateLabel(checkIn)} — ${dateLabel(checkOut)} · ${nights} ${nightLabel(nights)}</div>
               </div>
-              <div class="price-row" style="margin-top:12px">
-                <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки × ${nights} ${nightLabel(nights)}</span>
-                <span>${fmtPrice(saunaPrice)}</span>
+              <div class="sbc-price-row">
+                <div>
+                  <div class="sbc-price-name">🛁 Баня · весь период</div>
+                  <div class="sbc-price-meta">${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки × ${nights} ${nightLabel(nights)}</div>
+                </div>
+                <div class="sbc-price-total">${fmtPrice(saunaPrice)}</div>
               </div>
-              <div class="price-note">Баня в вашем распоряжении на весь период</div>
             </div>
 
             <div class="section-card">
