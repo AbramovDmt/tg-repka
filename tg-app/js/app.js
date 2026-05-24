@@ -649,6 +649,42 @@ const screens = {
   /* ── Велосипеды ────────────────────────────────────────── */
   bikes: () => {
     const { count } = state.bikes;
+    const inFlow    = state.bookingFlow;
+    const bikesTotal = calcBikes();
+    const prevTotal  = (state.currentOrder?.house?.price || 0) + (state.currentOrder?.sauna?.price || 0);
+    const grandTotal = prevTotal + bikesTotal;
+
+    const orderBlock = inFlow ? `
+      <div class="section-card price-block" id="bikes-order-block">
+        ${state.currentOrder?.house ? `
+        <div class="price-row">
+          <span>🏠 ${state.currentOrder.house.saunaIncluded ? 'Домик + баня' : 'Домик'}</span>
+          <span>${fmtPrice(state.currentOrder.house.price)}</span>
+        </div>` : ''}
+        ${state.currentOrder?.sauna ? `
+        <div class="price-row">
+          <span>🛁 Баня</span>
+          <span>${fmtPrice(state.currentOrder.sauna.price)}</span>
+        </div>` : ''}
+        <div class="price-row" id="bikes-price-row">
+          <span>🚴 Велосипеды</span>
+          <span id="bike-sum-price">${fmtPrice(bikesTotal)}</span>
+        </div>
+        <div class="price-row total" id="bikes-grand-total">
+          <span>Итого</span>
+          <span>${fmtPrice(grandTotal)}</span>
+        </div>
+      </div>` : `
+      <div class="booking-summary">
+        <div class="summary-row">
+          <span id="bike-sum-label">${count} велосипед${count>1?'а':''} · весь день</span>
+          <span class="summary-price" id="bike-sum-price">${fmtPrice(bikesTotal)}</span>
+        </div>
+      </div>`;
+
+    const btnLabel = inFlow
+      ? `Завершить бронирование · ${fmtPrice(grandTotal)}`
+      : `Забронировать · ${fmtPrice(bikesTotal)}`;
 
     return `
       <div class="bikes-screen">
@@ -676,12 +712,7 @@ const screens = {
             </div>
           </div>
 
-          <div class="booking-summary">
-            <div class="summary-row">
-              <span id="bike-sum-label">${count} велосипед${count>1?'а':''} · весь день</span>
-              <span class="summary-price" id="bike-sum-price">${fmtPrice(calcBikes())}</span>
-            </div>
-          </div>
+          ${orderBlock}
 
           <div class="section-card routes-section">
             <h3 class="section-title">Популярные маршруты</h3>
@@ -696,6 +727,10 @@ const screens = {
             <span class="cancel-icon">ℹ️</span>
             <span>Вернуть велосипеды до ${APP_DATA.bikes.returnTime}. Выдаёт хозяин при заезде.</span>
           </div>
+
+          <button class="btn-primary" id="bikes-submit-btn" data-action="submitBikes">
+            ${btnLabel}
+          </button>
         </div>
         <div class="screen-bottom-space"></div>
       </div>`;
@@ -1054,9 +1089,15 @@ function setupScreenButtons(screenId, params) {
       break;
     }
 
-    case 'bikes':
-      setMainButton(`Забронировать · ${fmtPrice(calcBikes())}`, submitBikes, true);
+    case 'bikes': {
+      const bikesTotal = calcBikes();
+      const prevTotal  = (state.currentOrder?.house?.price || 0) + (state.currentOrder?.sauna?.price || 0);
+      const grandTotal = prevTotal + bikesTotal;
+      const inFlow     = state.bookingFlow;
+      const txt = inFlow ? `Завершить · ${fmtPrice(grandTotal)}` : `Забронировать · ${fmtPrice(bikesTotal)}`;
+      setMainButton(txt, submitBikes, true);
       break;
+    }
 
     case 'upsellSauna':
     case 'upsellBikes':
@@ -1268,11 +1309,29 @@ function refreshSaunaSummary() {
 
 function refreshBikesSummary() {
   const { count } = state.bikes;
+  const inFlow     = state.bookingFlow;
+  const bikesTotal = calcBikes();
+  const prevTotal  = (state.currentOrder?.house?.price || 0) + (state.currentOrder?.sauna?.price || 0);
+  const grandTotal = prevTotal + bikesTotal;
+
   const lbl = document.getElementById('bike-sum-label');
   const pr  = document.getElementById('bike-sum-price');
   if (lbl) lbl.textContent = `${count} велосипед${count>1?'а':''} · весь день`;
-  if (pr)  pr.textContent  = fmtPrice(calcBikes());
-  setMainButton(`Забронировать · ${fmtPrice(calcBikes())}`, submitBikes, true);
+  if (pr)  pr.textContent  = fmtPrice(bikesTotal);
+
+  const grandEl = document.getElementById('bikes-grand-total');
+  if (grandEl) {
+    const span = grandEl.querySelector('span:last-child');
+    if (span) span.textContent = fmtPrice(grandTotal);
+  }
+
+  const btnLabel = inFlow
+    ? `Завершить бронирование · ${fmtPrice(grandTotal)}`
+    : `Забронировать · ${fmtPrice(bikesTotal)}`;
+  const btn = document.getElementById('bikes-submit-btn');
+  if (btn) btn.textContent = btnLabel;
+
+  setMainButton(btnLabel, submitBikes, true);
 }
 
 /* ═══ ОФФЕР-МОДАЛКА ════════════════════════════════════════ */
@@ -1321,6 +1380,10 @@ const actions = {
 
   submitBooking() {
     submitBooking();
+  },
+
+  submitBikes() {
+    submitBikes();
   },
 
   skipToUpsellBikes() {
