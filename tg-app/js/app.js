@@ -207,7 +207,7 @@ function calcBooking() {
   }
   const cleaning = APP_DATA.house.cleaning;
   const saunaTotal = guests > APP_DATA.house.capacity
-    ? nights * APP_DATA.sauna.minDuration * APP_DATA.sauna.pricePerHour
+    ? nights * APP_DATA.sauna.pricePerDay
     : 0;
   return { nights, nightsTotal, cleaning, saunaTotal, total: nightsTotal + cleaning + saunaTotal };
 }
@@ -531,7 +531,7 @@ const screens = {
         </div>
         ${price.saunaTotal ? `
         <div class="price-row">
-          <span>🛁 Баня · мин. ${APP_DATA.sauna.minDuration} ч/день</span>
+          <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
           <span>${fmtPrice(price.saunaTotal)}</span>
         </div>` : ''}
         <div class="price-row total">
@@ -856,9 +856,12 @@ const screens = {
   upsellSauna: () => {
     const { guests } = state.booking;
     const needsSauna = guests > APP_DATA.house.capacity;
-    const price = calcBooking();
+    const { house } = state.currentOrder;
+    const nights = house?.nights || 0;
+    const saunaPrice = nights * APP_DATA.sauna.pricePerDay;
 
     if (needsSauna) {
+      // Баня уже включена в цену (guests > 4) — только информируем
       return `
         <div class="upsell-screen">
           <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
@@ -867,36 +870,41 @@ const screens = {
             <div class="upsell-required-block">
               <div class="upsell-required-icon">🛁</div>
               <div class="upsell-required-text">
-                <strong>Для ${guests} гостей нужна баня</strong><br>
-                Домик до 4 человек, баня даёт +2 места.<br>
-                Стоимость бани уже учтена в заявке${price?.saunaTotal ? ': ' + fmtPrice(price.saunaTotal) : ''}.
+                <strong>Баня включена на весь период</strong><br>
+                Для ${guests} гостей нужна баня — там +2 места.
               </div>
             </div>
-            <p class="upsell-prompt">Хотите выбрать время прямо сейчас?</p>
-            <button class="btn-primary" data-action="navigate" data-screen="sauna">
-              🛁 Выбрать время бани
-            </button>
-            <button class="btn-outline upsell-skip" data-action="skipToUpsellBikes">
-              Выберу позже — хозяин поможет
+            <div class="upsell-day-price">
+              <div class="udp-row">
+                <span>${nights} ${nightLabel(nights)} × ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
+                <span>${fmtPrice(saunaPrice)}</span>
+              </div>
+              <div class="udp-note">Уже учтена в итоговой сумме заявки</div>
+            </div>
+            <button class="btn-primary" data-action="skipToUpsellBikes">
+              Всё верно, далее →
             </button>
           </div>
         </div>`;
     }
 
+    // Баня опциональна (guests ≤ 4) — предлагаем добавить посуточно
     return `
       <div class="upsell-screen">
         <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
         <div class="screen-content">
           <p class="upsell-step">Шаг 1 из 2</p>
           <p class="upsell-invite">Хотите добавить баню?</p>
-          <div class="upsell-card" data-action="navigate" data-screen="sauna">
-            <span class="upsell-icon">🛁</span>
-            <div class="upsell-body">
-              <div class="upsell-name">Баня-домик</div>
-              <div class="upsell-meta">${APP_DATA.sauna.pricePerHour.toLocaleString('ru-RU')} ₽/час · мин. 2 ч · до ${APP_DATA.sauna.capacity} чел.</div>
+          <div class="upsell-day-price">
+            <div class="udp-row">
+              <span>${nights} ${nightLabel(nights)} × ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
+              <span>${fmtPrice(saunaPrice)}</span>
             </div>
-            <span class="upsell-arrow">›</span>
+            <div class="udp-note">На всё время вашего пребывания · до ${APP_DATA.sauna.capacity} чел.</div>
           </div>
+          <button class="btn-primary" data-action="addSaunaToOrder">
+            🛁 Добавить баню — ${fmtPrice(saunaPrice)}
+          </button>
           <button class="btn-outline upsell-skip" data-action="skipToUpsellBikes">
             Нет, спасибо
           </button>
@@ -959,20 +967,21 @@ const screens = {
       const gLabel = g === 1 ? 'человек' : g < 5 ? 'человека' : 'человек';
       items.push({
         icon:  '🏠',
-        name:  'Домик',
+        name:  house.saunaIncluded ? 'Домик + баня' : 'Домик',
         meta:  `${dateLabel(house.checkIn)} – ${dateLabel(house.checkOut)} · ${house.nights} ${nightLabel(house.nights)} · ${g} ${gLabel}`,
         price: fmtPrice(house.price),
       });
     }
     if (sauna) {
-      const [h] = sauna.slot.split(':').map(Number);
-      const endT = `${pad(Math.min(h + sauna.duration, 22))}:00`;
-      items.push({
-        icon:  '🛁',
-        name:  'Баня',
-        meta:  `${dateLabel(sauna.date)} · ${sauna.slot}–${endT}`,
-        price: house?.saunaIncluded ? 'включена' : fmtPrice(sauna.price),
-      });
+      let meta;
+      if (sauna.perDay) {
+        meta = `${sauna.nights} ${nightLabel(sauna.nights)} · весь день`;
+      } else {
+        const [h] = sauna.slot.split(':').map(Number);
+        const endT = `${pad(Math.min(h + sauna.duration, 22))}:00`;
+        meta = `${dateLabel(sauna.date)} · ${sauna.slot}–${endT}`;
+      }
+      items.push({ icon: '🛁', name: 'Баня', meta, price: fmtPrice(sauna.price) });
     }
     if (bikes) {
       items.push({
@@ -1198,7 +1207,7 @@ function refreshBookingPrice() {
         </div>
         ${price.saunaTotal ? `
         <div class="price-row">
-          <span>🛁 Баня · мин. ${APP_DATA.sauna.minDuration} ч/день</span>
+          <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
           <span>${fmtPrice(price.saunaTotal)}</span>
         </div>` : ''}
         <div class="price-row total">
@@ -1316,6 +1325,20 @@ const actions = {
 
   skipToUpsellBikes() {
     haptic('light');
+    router.navigate('upsellBikes');
+  },
+
+  addSaunaToOrder() {
+    haptic('medium');
+    const { nights } = state.currentOrder.house;
+    state.currentOrder.sauna = {
+      perDay:   true,
+      nights,
+      price:    nights * APP_DATA.sauna.pricePerDay,
+      date:     null,
+      slot:     null,
+      duration: null,
+    };
     router.navigate('upsellBikes');
   },
 

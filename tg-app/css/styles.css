@@ -1647,6 +1647,25 @@ body.dark .amenity-item {
   margin-bottom: var(--sp-md);
 }
 .upsell-submit { display: block; width: 100%; margin-top: var(--sp-md); }
+
+.upsell-day-price {
+  background: var(--tg-bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--sp-md);
+  margin-bottom: var(--sp-md);
+}
+.udp-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tg-text);
+}
+.udp-note {
+  font-size: 12px;
+  color: var(--tg-hint);
+  margin-top: 4px;
+}
 .upsell-card {
   display: flex;
   align-items: center;
