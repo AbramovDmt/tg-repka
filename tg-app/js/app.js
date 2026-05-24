@@ -969,7 +969,31 @@ const screens = {
   /* ── Шаг 2: предложение велосипедов ────────────────────── */
   upsellBikes: () => {
     const inBookingFlow = state.bookingFlow;
-    const skipLabel = inBookingFlow ? 'Готово, отправить заявку' : 'Нет, отправить заявку';
+    const { house, sauna } = state.currentOrder;
+    const prevTotal = (house?.price || 0) + (sauna?.price || 0);
+
+    const priceBlock = prevTotal > 0 ? `
+      <div class="section-card price-block">
+        ${house ? `
+        <div class="price-row">
+          <span>🏠 ${house.saunaIncluded ? 'Домик + баня' : 'Домик'}</span>
+          <span>${fmtPrice(house.price)}</span>
+        </div>` : ''}
+        ${sauna && !house?.saunaIncluded ? `
+        <div class="price-row">
+          <span>🛁 Баня</span>
+          <span>${fmtPrice(sauna.price)}</span>
+        </div>` : ''}
+        <div class="price-row total">
+          <span>Без велосипедов</span>
+          <span>${fmtPrice(prevTotal)}</span>
+        </div>
+      </div>` : '';
+
+    const submitLabel = prevTotal > 0
+      ? `Отправить заявку · ${fmtPrice(prevTotal)}`
+      : 'Отправить заявку';
+
     return `
       <div class="upsell-screen">
         <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
@@ -984,8 +1008,9 @@ const screens = {
             </div>
             <span class="upsell-arrow">›</span>
           </div>
+          ${priceBlock}
           <button class="btn-primary upsell-submit" data-action="finalSubmit">
-            ${skipLabel}
+            ${submitLabel}
           </button>
         </div>
       </div>`;
