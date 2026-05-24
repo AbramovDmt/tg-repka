@@ -14,6 +14,7 @@ const state = {
   success:      { type: 'booking' },
   bookingFlow:  false, // true when sauna/bikes upsell is part of a house booking
   currentOrder: { house: null, sauna: null, bikes: null },
+  orderComment: '',
 };
 
 /* ═══ TELEGRAM SDK ══════════════════════════════════════════ */
@@ -1067,6 +1068,11 @@ const screens = {
             <span class="upsell-arrow">›</span>
           </div>
           ${priceBlock}
+          <div class="section-card">
+            <label class="comment-label">Комментарий хозяину <span class="optional">(необязательно)</span></label>
+            <textarea class="comment-input" id="order-comment"
+              placeholder="Позвоните за час до заезда / едем с собакой / вопросы по оплате…">${state.orderComment}</textarea>
+          </div>
           <button class="btn-primary upsell-submit" data-action="finalSubmit">
             ${submitLabel}
           </button>
@@ -1572,6 +1578,8 @@ const actions = {
   },
 
   finalSubmit() {
+    const ta = document.getElementById('order-comment');
+    if (ta) state.orderComment = ta.value;
     hapticNotify('success');
     const type = state.bookingFlow ? 'booking' : 'sauna';
     state.bookingFlow = false;
