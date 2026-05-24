@@ -6,12 +6,13 @@
 /* ═══ СОСТОЯНИЕ ═══════════════════════════════════════════ */
 
 const state = {
-  booking: { checkIn: null, checkOut: null, guests: 2, comment: '' },
-  sauna:   { date: null, slot: null, duration: 2 },
-  bikes:   { count: 1, duration: '2h' },
-  cal:     { year: new Date().getFullYear(), month: new Date().getMonth() },
-  nearby:  { tab: 'Природа' },
-  success: { type: 'booking' },
+  booking:      { checkIn: null, checkOut: null, guests: 2, comment: '' },
+  sauna:        { date: null, slot: null, duration: 2 },
+  bikes:        { count: 1, duration: '2h' },
+  cal:          { year: new Date().getFullYear(), month: new Date().getMonth() },
+  nearby:       { tab: 'Природа' },
+  success:      { type: 'booking' },
+  bookingFlow:  false, // true when sauna/bikes upsell is part of a house booking
 };
 
 /* ═══ TELEGRAM SDK ══════════════════════════════════════════ */
@@ -527,15 +528,15 @@ const screens = {
           <span>Уборка</span>
           <span>${fmtPrice(price.cleaning)}</span>
         </div>
-        <div class="price-row total">
-          <span>Итого</span>
-          <span>${fmtPrice(price.total)}</span>
-        </div>
         ${price.saunaTotal ? `
         <div class="price-row">
           <span>🛁 Баня · мин. ${APP_DATA.sauna.minDuration} ч/день</span>
           <span>${fmtPrice(price.saunaTotal)}</span>
         </div>` : ''}
+        <div class="price-row total">
+          <span>Итого</span>
+          <span>${fmtPrice(price.total)}</span>
+        </div>
       </div>` : '';
 
     return `
@@ -557,8 +558,7 @@ const screens = {
               </div>
             </div>
             <div class="sauna-guests-hint" id="sauna-guests-hint"${guests > APP_DATA.house.capacity ? '' : ' style="display:none"'}>
-              🛁 При 5–6 гостях нужна аренда бани — там +2 места.
-              <span class="sauna-hint-link" data-action="navigate" data-screen="sauna">Открыть баню →</span>
+              🛁 При 5–6 гостях баня включена в стоимость — там +2 места для группы.
             </div>
           </div>
 
@@ -851,25 +851,68 @@ const screens = {
       </div>
     </div>`,
 
-  /* ── Допы после бронирования ───────────────────────────── */
-  upsell: () => {
-    const needsSauna = state.booking.guests > APP_DATA.house.capacity;
+  /* ── Шаг 1: предложение бани (после бронирования домика) ── */
+  upsellSauna: () => {
+    const { guests } = state.booking;
+    const needsSauna = guests > APP_DATA.house.capacity;
+    const price = calcBooking();
+
+    if (needsSauna) {
+      return `
+        <div class="upsell-screen">
+          <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
+          <div class="screen-content">
+            <p class="upsell-step">Шаг 1 из 2</p>
+            <div class="upsell-required-block">
+              <div class="upsell-required-icon">🛁</div>
+              <div class="upsell-required-text">
+                <strong>Для ${guests} гостей нужна баня</strong><br>
+                Домик до 4 человек, баня даёт +2 места.<br>
+                Стоимость бани уже учтена в заявке${price?.saunaTotal ? ': ' + fmtPrice(price.saunaTotal) : ''}.
+              </div>
+            </div>
+            <p class="upsell-prompt">Хотите выбрать время прямо сейчас?</p>
+            <button class="btn-primary" data-action="navigate" data-screen="sauna">
+              🛁 Выбрать время бани
+            </button>
+            <button class="btn-outline upsell-skip" data-action="skipToUpsellBikes">
+              Выберу позже — хозяин поможет
+            </button>
+          </div>
+        </div>`;
+    }
+
     return `
       <div class="upsell-screen">
         <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
         <div class="screen-content">
-          <p class="upsell-invite">Что добавим к поездке?</p>
-
-          <div class="upsell-card${needsSauna ? ' required' : ''}" data-action="navigate" data-screen="sauna">
+          <p class="upsell-step">Шаг 1 из 2</p>
+          <p class="upsell-invite">Хотите добавить баню?</p>
+          <div class="upsell-card" data-action="navigate" data-screen="sauna">
             <span class="upsell-icon">🛁</span>
             <div class="upsell-body">
-              <div class="upsell-name">Баня</div>
+              <div class="upsell-name">Баня-домик</div>
               <div class="upsell-meta">${APP_DATA.sauna.pricePerHour.toLocaleString('ru-RU')} ₽/час · мин. 2 ч · до ${APP_DATA.sauna.capacity} чел.</div>
-              ${needsSauna ? '<div class="upsell-tag">Нужна для вашей группы</div>' : ''}
             </div>
             <span class="upsell-arrow">›</span>
           </div>
+          <button class="btn-outline upsell-skip" data-action="skipToUpsellBikes">
+            Нет, спасибо
+          </button>
+        </div>
+      </div>`;
+  },
 
+  /* ── Шаг 2: предложение велосипедов ────────────────────── */
+  upsellBikes: () => {
+    const inBookingFlow = state.bookingFlow;
+    const skipLabel = inBookingFlow ? 'Готово, отправить заявку' : 'Нет, отправить заявку';
+    return `
+      <div class="upsell-screen">
+        <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
+        <div class="screen-content">
+          ${inBookingFlow ? '<p class="upsell-step">Шаг 2 из 2</p>' : ''}
+          <p class="upsell-invite">Хотите велосипеды?</p>
           <div class="upsell-card" data-action="navigate" data-screen="bikes">
             <span class="upsell-icon">🚴</span>
             <div class="upsell-body">
@@ -878,9 +921,8 @@ const screens = {
             </div>
             <span class="upsell-arrow">›</span>
           </div>
-
-          <button class="btn-outline upsell-skip" data-action="navigate" data-screen="success" data-type="booking">
-            Готово, на главную
+          <button class="btn-primary upsell-submit" data-action="finalSubmit">
+            ${skipLabel}
           </button>
         </div>
       </div>`;
@@ -892,14 +934,14 @@ const screens = {
       booking: {
         icon: '🏠',
         title: 'Заявка отправлена!',
-        sub:   'Хозяин свяжется с вами в течение часа для подтверждения и обсуждения оплаты.',
+        sub:   'В ближайший час хозяин свяжется с вами для подтверждения.',
         note:  'Уведомление придёт в Telegram',
       },
       sauna: {
         icon: '🔥',
         title: 'Баня забронирована!',
         sub:   `${state.sauna.date ? dateLabel(state.sauna.date) : ''} в ${state.sauna.slot || '—'} — ждём вас!`,
-        note:  'Подтверждение придёт в Telegram',
+        note:  'Домик в эту заявку не включён. Подтверждение придёт в Telegram.',
       },
       bikes: {
         icon: '🚴',
@@ -955,7 +997,8 @@ function setupScreenButtons(screenId, params) {
       setMainButton(`Забронировать · ${fmtPrice(calcBikes())}`, submitBikes, true);
       break;
 
-    case 'upsell':
+    case 'upsellSauna':
+    case 'upsellBikes':
       hideMainButton();
       break;
 
@@ -996,22 +1039,25 @@ function setupCommentSync() {
 function submitBooking() {
   const ta = document.getElementById('booking-comment');
   if (ta) state.booking.comment = ta.value;
+  state.bookingFlow = true;
   hapticNotify('success');
   router.stack = [{ id: 'home', params: {} }];
-  router.navigate('upsell');
+  router.navigate('upsellSauna');
 }
 
 function submitSauna() {
   if (!state.sauna.date || !state.sauna.slot) return;
   hapticNotify('success');
   router.stack = [{ id: 'home', params: {} }];
-  router.navigate('success', { type: 'sauna' });
+  router.navigate('upsellBikes');
 }
 
 function submitBikes() {
   hapticNotify('success');
+  const type = state.bookingFlow ? 'booking' : 'bikes';
+  state.bookingFlow = false;
   router.stack = [{ id: 'home', params: {} }];
-  router.navigate('success', { type: 'bikes' });
+  router.navigate('success', { type });
 }
 
 /* ═══ ОБНОВЛЕНИЯ UI БЕЗ ПОЛНОГО РЕБИЛДА ЭКРАНА ══════════════ */
@@ -1068,14 +1114,14 @@ function refreshBookingPrice() {
         <div class="price-row">
           <span>Уборка</span><span>${fmtPrice(price.cleaning)}</span>
         </div>
-        <div class="price-row total">
-          <span>Итого</span><span>${fmtPrice(price.total)}</span>
-        </div>
         ${price.saunaTotal ? `
         <div class="price-row">
           <span>🛁 Баня · мин. ${APP_DATA.sauna.minDuration} ч/день</span>
           <span>${fmtPrice(price.saunaTotal)}</span>
         </div>` : ''}
+        <div class="price-row total">
+          <span>Итого</span><span>${fmtPrice(price.total)}</span>
+        </div>
       </div>`;
     if (el) { el.outerHTML = html; }
     else {
@@ -1184,6 +1230,19 @@ const actions = {
 
   submitBooking() {
     submitBooking();
+  },
+
+  skipToUpsellBikes() {
+    haptic('light');
+    router.navigate('upsellBikes');
+  },
+
+  finalSubmit() {
+    hapticNotify('success');
+    const type = state.bookingFlow ? 'booking' : 'sauna';
+    state.bookingFlow = false;
+    router.stack = [{ id: 'home', params: {} }];
+    router.navigate('success', { type });
   },
 
   goHome() {

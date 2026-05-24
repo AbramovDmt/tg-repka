@@ -1612,11 +1612,41 @@ body.dark .amenity-item {
   font-size: 13px;
   flex-shrink: 0;
 }
-.upsell-invite {
-  font-size: 14px;
+.upsell-step {
+  font-size: 12px;
   color: var(--tg-hint);
+  margin-bottom: var(--sp-sm);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.upsell-required-block {
+  display: flex;
+  gap: var(--sp-sm);
+  align-items: flex-start;
+  background: var(--glass-amber-bg);
+  border: 1px solid var(--glass-amber-border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-md);
   margin-bottom: var(--sp-md);
 }
+.upsell-required-icon { font-size: 28px; flex-shrink: 0; }
+.upsell-required-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--tg-text);
+}
+.upsell-prompt {
+  font-size: 15px;
+  color: var(--tg-text);
+  margin-bottom: var(--sp-md);
+}
+.upsell-invite {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--tg-text);
+  margin-bottom: var(--sp-md);
+}
+.upsell-submit { display: block; width: 100%; margin-top: var(--sp-md); }
 .upsell-card {
   display: flex;
   align-items: center;
