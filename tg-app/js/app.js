@@ -7,7 +7,7 @@
 
 const state = {
   booking:      { checkIn: null, checkOut: null, guests: 2, comment: '' },
-  sauna:        { date: null, slot: null, duration: 2, comment: '' },
+  sauna:        { date: null, slot: null, duration: 2, comment: '', standaloneOverride: false },
   bikes:        { count: 1, duration: '2h', comment: '' },
   cal:          { year: new Date().getFullYear(), month: new Date().getMonth() },
   nearby:       { tab: 'Природа' },
@@ -519,6 +519,10 @@ const screens = {
         </div>
       </div>` : '';
 
+    const preSauna      = state.currentOrder?.sauna?.perDay && price && !price.saunaTotal;
+    const preSaunaPrice = preSauna ? state.currentOrder.sauna.price : 0;
+    const displayTotal  = price ? price.total + preSaunaPrice : 0;
+
     const priceBlock = price ? `
       <div class="section-card price-block">
         <div class="price-row">
@@ -534,9 +538,14 @@ const screens = {
           <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
           <span>${fmtPrice(price.saunaTotal)}</span>
         </div>` : ''}
+        ${preSauna ? `
+        <div class="price-row">
+          <span>🛁 Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
+          <span>${fmtPrice(preSaunaPrice)}</span>
+        </div>` : ''}
         <div class="price-row total">
           <span>Итого</span>
-          <span>${fmtPrice(price.total)}</span>
+          <span>${fmtPrice(displayTotal)}</span>
         </div>
       </div>` : '';
 
@@ -579,7 +588,7 @@ const screens = {
           <button class="btn-primary" id="booking-submit-btn"
             data-action="submitBooking"
             ${checkIn && checkOut ? '' : 'disabled'}>
-            ${price ? `Отправить заявку · ${fmtPrice(price.total)}` : 'Выберите даты'}
+            ${price ? `Отправить заявку · ${fmtPrice(displayTotal)}` : 'Выберите даты'}
           </button>
 
           <div class="platform-section">
@@ -596,6 +605,58 @@ const screens = {
 
   /* ── Баня ──────────────────────────────────────────────── */
   sauna: () => {
+    const { checkIn, checkOut } = state.booking;
+    const hasHouseDates = checkIn && checkOut && !state.sauna.standaloneOverride;
+
+    if (hasHouseDates) {
+      const nights     = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
+      const saunaPrice = nights * APP_DATA.sauna.pricePerDay;
+      const alreadyAdded = state.currentOrder?.sauna?.perDay;
+
+      return `
+        <div class="sauna-screen">
+          <div class="screen-header"><h2 class="screen-title">Баня</h2></div>
+          <div class="sauna-hero">
+            <div class="sauna-hero-image"></div>
+            <div class="sauna-hero-info">
+              до ${APP_DATA.sauna.capacity} чел. · отдельный домик 6×4 м
+            </div>
+          </div>
+          <div class="screen-content">
+            <div class="section-card">
+              <div class="sauna-booking-context">
+                <div class="sbc-label">К вашей брони домика</div>
+                <div class="sbc-dates">${dateLabel(checkIn)} — ${dateLabel(checkOut)} · ${nights} ${nightLabel(nights)}</div>
+              </div>
+              <div class="price-row" style="margin-top:12px">
+                <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки × ${nights} ${nightLabel(nights)}</span>
+                <span>${fmtPrice(saunaPrice)}</span>
+              </div>
+              <div class="price-note">Баня в вашем распоряжении на весь период</div>
+            </div>
+
+            <div class="section-card">
+              <label class="comment-label">Комментарий / вопрос <span class="optional">(необязательно)</span></label>
+              <textarea class="comment-input" id="sauna-comment"
+                placeholder="Сколько человек, нужны ли веники, есть вопросы…">${state.sauna.comment}</textarea>
+            </div>
+
+            ${alreadyAdded
+              ? `<div class="sauna-added-notice">✓ Баня добавлена к брони домика</div>
+                 <button class="btn-outline" data-action="removeSaunaPreBooking">Убрать баню</button>`
+              : `<button class="btn-primary" data-action="addSaunaPreBooking">
+                   Добавить к брони · ${fmtPrice(saunaPrice)}
+                 </button>`}
+
+            <div class="sauna-standalone-hint" data-action="switchToStandaloneMode">
+              Нужна только баня без домика — выбрать по часам →
+            </div>
+          </div>
+          <div class="screen-bottom-space"></div>
+        </div>`;
+    }
+
+    /* ── Обычный режим: почасовая аренда ── */
     const { date, slot, duration, comment } = state.sauna;
     const price = calcSauna();
     const [h]   = slot ? slot.split(':').map(Number) : [0];
@@ -1119,17 +1180,33 @@ function setupScreenButtons(screenId, params) {
       break;
 
     case 'booking': {
-      const price = calcBooking();
-      const ok    = !!(state.booking.checkIn && state.booking.checkOut);
-      const txt   = price ? `Отправить заявку · ${fmtPrice(price.total)}` : 'Выберите даты';
+      const price         = calcBooking();
+      const ok            = !!(state.booking.checkIn && state.booking.checkOut);
+      const preSauna      = state.currentOrder?.sauna?.perDay && price && !price.saunaTotal;
+      const preSaunaPrice = preSauna ? state.currentOrder.sauna.price : 0;
+      const displayTotal  = price ? price.total + preSaunaPrice : 0;
+      const txt           = price ? `Отправить заявку · ${fmtPrice(displayTotal)}` : 'Выберите даты';
       setMainButton(txt, submitBooking, ok);
       break;
     }
 
     case 'sauna': {
-      const ok  = !!(state.sauna.date && state.sauna.slot);
-      const txt = ok ? `Забронировать баню · ${fmtPrice(calcSauna())}` : 'Выберите дату и слот';
-      setMainButton(txt, submitSauna, ok);
+      const { checkIn, checkOut } = state.booking;
+      const hasHouseDates = checkIn && checkOut && !state.sauna.standaloneOverride;
+      if (hasHouseDates) {
+        const nights     = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
+        const saunaPrice = nights * APP_DATA.sauna.pricePerDay;
+        const alreadyAdded = state.currentOrder?.sauna?.perDay;
+        if (!alreadyAdded) {
+          setMainButton(`Добавить к брони · ${fmtPrice(saunaPrice)}`, () => actions.addSaunaPreBooking());
+        } else {
+          hideMainButton();
+        }
+      } else {
+        const ok  = !!(state.sauna.date && state.sauna.slot);
+        const txt = ok ? `Забронировать баню · ${fmtPrice(calcSauna())}` : 'Выберите дату и слот';
+        setMainButton(txt, submitSauna, ok);
+      }
       break;
     }
 
@@ -1185,23 +1262,24 @@ function setupCommentSync() {
 function submitBooking() {
   const ta = document.getElementById('booking-comment');
   if (ta) state.booking.comment = ta.value;
-  const price = calcBooking();
+  const price    = calcBooking();
+  const preSauna = state.currentOrder?.sauna?.perDay && !price?.saunaTotal ? state.currentOrder.sauna : null;
   state.currentOrder = {
     house: price ? {
-      checkIn:      state.booking.checkIn,
-      checkOut:     state.booking.checkOut,
-      nights:       price.nights,
-      guests:       state.booking.guests,
-      price:        price.total,
+      checkIn:       state.booking.checkIn,
+      checkOut:      state.booking.checkOut,
+      nights:        price.nights,
+      guests:        state.booking.guests,
+      price:         price.total,
       saunaIncluded: price.saunaTotal > 0,
     } : null,
-    sauna: null,
+    sauna: preSauna,
     bikes: null,
   };
   state.bookingFlow = true;
   hapticNotify('success');
   router.stack = [{ id: 'home', params: {} }];
-  router.navigate('upsellSauna');
+  router.navigate(preSauna ? 'upsellBikes' : 'upsellSauna');
 }
 
 function submitSauna() {
@@ -1278,7 +1356,10 @@ function refreshSelectedDates() {
 
 function refreshBookingPrice() {
   const { checkIn, checkOut } = state.booking;
-  const price   = calcBooking();
+  const price         = calcBooking();
+  const preSauna      = state.currentOrder?.sauna?.perDay && price && !price.saunaTotal;
+  const preSaunaPrice = preSauna ? state.currentOrder.sauna.price : 0;
+  const displayTotal  = price ? price.total + preSaunaPrice : 0;
   const content = document.querySelector('.screen-content');
   if (!content) return;
 
@@ -1299,8 +1380,13 @@ function refreshBookingPrice() {
           <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
           <span>${fmtPrice(price.saunaTotal)}</span>
         </div>` : ''}
+        ${preSauna ? `
+        <div class="price-row">
+          <span>🛁 Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
+          <span>${fmtPrice(preSaunaPrice)}</span>
+        </div>` : ''}
         <div class="price-row total">
-          <span>Итого</span><span>${fmtPrice(price.total)}</span>
+          <span>Итого</span><span>${fmtPrice(displayTotal)}</span>
         </div>
       </div>`;
     if (el) { el.outerHTML = html; }
@@ -1313,7 +1399,7 @@ function refreshBookingPrice() {
   }
 
   const ok  = !!(checkIn && checkOut);
-  const txt = price ? `Отправить заявку · ${fmtPrice(price.total)}` : 'Выберите даты';
+  const txt = price ? `Отправить заявку · ${fmtPrice(displayTotal)}` : 'Выберите даты';
   setMainButton(txt, submitBooking, ok);
   const btn = document.getElementById('booking-submit-btn');
   if (btn) { btn.textContent = txt; btn.disabled = !ok; }
@@ -1459,6 +1545,38 @@ const actions = {
     router.navigate('upsellBikes');
   },
 
+  addSaunaPreBooking() {
+    haptic('medium');
+    const { checkIn, checkOut } = state.booking;
+    const nights     = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
+    const ta = document.getElementById('sauna-comment');
+    if (ta) state.sauna.comment = ta.value;
+    state.currentOrder = { ...state.currentOrder, sauna: {
+      perDay: true, nights,
+      price:  nights * APP_DATA.sauna.pricePerDay,
+      date: null, slot: null, duration: null,
+    }};
+    router.navigate('booking');
+  },
+
+  removeSaunaPreBooking() {
+    haptic('light');
+    state.currentOrder = { ...state.currentOrder, sauna: null };
+    const cur = router.stack[router.stack.length - 1];
+    if (cur?.id === 'booking') {
+      refreshBookingPrice();
+    } else {
+      router._render(cur.id, cur.params || {}, 'fade');
+    }
+  },
+
+  switchToStandaloneMode() {
+    haptic('light');
+    state.sauna.standaloneOverride = true;
+    const cur = router.stack[router.stack.length - 1];
+    router._render(cur.id, cur.params || {}, 'fade');
+  },
+
   finalSubmit() {
     hapticNotify('success');
     const type = state.bookingFlow ? 'booking' : 'sauna';
@@ -1479,6 +1597,7 @@ const actions = {
   /* Бронирование: выбор даты */
   pickDate({ date }) {
     haptic('light');
+    state.sauna.standaloneOverride = false;
     const { checkIn, checkOut } = state.booking;
 
     if (!checkIn || (checkIn && checkOut)) {

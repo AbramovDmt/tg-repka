@@ -1772,6 +1772,58 @@ body.dark .amenity-item {
   background: var(--tg-bg);
 }
 
+/* ── Баня: контекст домика ─────────────────────────────── */
+.sauna-booking-context {
+  margin-bottom: 4px;
+}
+.sbc-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--amber);
+  margin-bottom: 2px;
+}
+.sbc-dates {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tg-text);
+}
+.price-note {
+  font-size: 12px;
+  color: var(--tg-hint);
+  margin-top: 6px;
+}
+.sauna-added-notice {
+  background: var(--tg-secondary-bg);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4CAF50;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.sauna-standalone-hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--tg-hint);
+  padding: 16px 0 4px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.remove-item {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--tg-hint);
+  cursor: pointer;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--tg-secondary-bg);
+}
+
 .success-icon { font-size: 64px; }
 
 .success-checkmark {
