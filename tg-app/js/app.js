@@ -7,8 +7,8 @@
 
 const state = {
   booking:      { checkIn: null, checkOut: null, guests: 2, comment: '' },
-  sauna:        { date: null, slot: null, duration: 2 },
-  bikes:        { count: 1, duration: '2h' },
+  sauna:        { date: null, slot: null, duration: 2, comment: '' },
+  bikes:        { count: 1, duration: '2h', comment: '' },
   cal:          { year: new Date().getFullYear(), month: new Date().getMonth() },
   nearby:       { tab: 'Природа' },
   success:      { type: 'booking' },
@@ -596,10 +596,11 @@ const screens = {
 
   /* ── Баня ──────────────────────────────────────────────── */
   sauna: () => {
-    const { date, slot, duration } = state.sauna;
+    const { date, slot, duration, comment } = state.sauna;
     const price = calcSauna();
     const [h]   = slot ? slot.split(':').map(Number) : [0];
     const endT  = slot ? `${pad(Math.min(h+duration, 22))}:00` : '';
+    const ok    = !!(date && slot);
 
     return `
       <div class="sauna-screen">
@@ -641,6 +642,18 @@ const screens = {
                 </div>
                </div>`
             : `<div class="hint-block">Выберите дату и слот для бронирования</div>`}
+
+          <div class="section-card">
+            <label class="comment-label">Комментарий / вопрос <span class="optional">(необязательно)</span></label>
+            <textarea class="comment-input" id="sauna-comment"
+              placeholder="Сколько человек, нужны ли веники, есть вопросы…">${comment}</textarea>
+          </div>
+
+          <button class="btn-primary" id="sauna-submit-btn"
+            data-action="submitSauna"
+            ${ok ? '' : 'disabled'}>
+            ${ok ? `Забронировать баню · ${fmtPrice(price)}` : 'Выберите дату и слот'}
+          </button>
         </div>
         <div class="screen-bottom-space"></div>
       </div>`;
@@ -726,6 +739,12 @@ const screens = {
           <div class="cancellation-note">
             <span class="cancel-icon">ℹ️</span>
             <span>Вернуть велосипеды до ${APP_DATA.bikes.returnTime}. Выдаёт хозяин при заезде.</span>
+          </div>
+
+          <div class="section-card">
+            <label class="comment-label">Комментарий / вопрос <span class="optional">(необязательно)</span></label>
+            <textarea class="comment-input" id="bikes-comment"
+              placeholder="Нужен ли детский велосипед, шлем, есть вопросы…">${state.bikes.comment}</textarea>
           </div>
 
           <button class="btn-primary" id="bikes-submit-btn" data-action="submitBikes">
@@ -1162,6 +1181,8 @@ function submitBooking() {
 
 function submitSauna() {
   if (!state.sauna.date || !state.sauna.slot) return;
+  const ta = document.getElementById('sauna-comment');
+  if (ta) state.sauna.comment = ta.value;
   const saunaData = {
     date:     state.sauna.date,
     slot:     state.sauna.slot,
@@ -1179,6 +1200,8 @@ function submitSauna() {
 }
 
 function submitBikes() {
+  const ta = document.getElementById('bikes-comment');
+  if (ta) state.bikes.comment = ta.value;
   hapticNotify('success');
   const type = state.bookingFlow ? 'booking' : (state.currentOrder.sauna ? 'sauna' : 'bikes');
   const bikesData = { count: state.bikes.count, price: calcBikes() };
@@ -1305,6 +1328,8 @@ function refreshSaunaSummary() {
   const ok  = !!(date && slot);
   const txt = ok ? `Забронировать баню · ${fmtPrice(calcSauna())}` : 'Выберите дату и слот';
   setMainButton(txt, submitSauna, ok);
+  const btn = document.getElementById('sauna-submit-btn');
+  if (btn) { btn.textContent = txt; btn.disabled = !ok; }
 }
 
 function refreshBikesSummary() {
@@ -1380,6 +1405,10 @@ const actions = {
 
   submitBooking() {
     submitBooking();
+  },
+
+  submitSauna() {
+    submitSauna();
   },
 
   submitBikes() {
