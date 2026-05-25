@@ -122,7 +122,7 @@ const TAB_SCREENS = { home: 'home', booking: 'booking', sauna: 'sauna', more: 'm
 
 const SCREEN_TAB = {
   home: 'home', house: 'home',
-  booking: 'booking',
+  booking: 'booking', upsellSauna: 'booking', upsellBikes: 'booking',
   sauna: 'sauna',
   more: 'more', bikes: 'more', nearby: 'more', instructions: 'more', contact: 'more',
 };
@@ -991,7 +991,7 @@ const screens = {
                 Для ${guests} гостей нужна баня — там +2 места.
               </div>
             </div>
-            <div class="upsell-day-price">
+            <div class="upsell-day-price section-card">
               <div class="udp-row">
                 <span>${nights} ${nightLabel(nights)} × ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
                 <span>${fmtPrice(saunaPrice)}</span>
@@ -1012,7 +1012,7 @@ const screens = {
         <div class="screen-content">
           <p class="upsell-step">Шаг 1 из 2</p>
           <p class="upsell-invite">Хотите добавить баню?</p>
-          <div class="upsell-day-price">
+          <div class="upsell-day-price section-card">
             <div class="udp-row">
               <span>${nights} ${nightLabel(nights)} × ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
               <span>${fmtPrice(saunaPrice)}</span>
@@ -1073,9 +1073,9 @@ const screens = {
           </div>
           ${priceBlock}
           <div class="section-card">
-            <label class="comment-label">Комментарий хозяину <span class="optional">(необязательно)</span></label>
+            <label class="comment-label">Есть вопрос или пожелание? <span class="optional">(необязательно)</span></label>
             <textarea class="comment-input" id="order-comment"
-              placeholder="Позвоните за час до заезда / едем с собакой / вопросы по оплате…">${state.orderComment}</textarea>
+              placeholder="Напишите хозяину — любой вопрос или уточнение по брони">${state.orderComment}</textarea>
           </div>
           <button class="btn-primary upsell-submit" data-action="finalSubmit">
             ${submitLabel}

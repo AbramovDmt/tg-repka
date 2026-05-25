@@ -308,6 +308,12 @@ textarea, input { font-family: var(--font); }
   border: 1px solid var(--glass-border);
 }
 
+/* Карточки на экране бани — тёплый янтарный тон */
+.sauna-screen .section-card {
+  background: var(--glass-amber-bg);
+  border-color: var(--glass-amber-border);
+}
+
 .section-title {
   font-size: 11px;
   font-weight: 700;
@@ -1649,10 +1655,8 @@ body.dark .amenity-item {
 .upsell-submit { display: block; width: 100%; margin-top: var(--sp-md); }
 
 .upsell-day-price {
-  background: var(--tg-bg-secondary);
-  border-radius: var(--radius-md);
-  padding: var(--sp-md);
   margin-bottom: var(--sp-md);
+  padding: var(--sp-md);
 }
 .udp-row {
   display: flex;
@@ -1775,6 +1779,7 @@ body.dark .amenity-item {
 /* ── Баня: контекст домика ─────────────────────────────── */
 .sauna-booking-context {
   margin-bottom: 4px;
+  padding: var(--sp-md) var(--sp-md) 0;
 }
 .sbc-label {
   font-size: 11px;
@@ -1799,7 +1804,7 @@ body.dark .amenity-item {
   justify-content: space-between;
   align-items: center;
   margin-top: 12px;
-  padding-top: 10px;
+  padding: 10px var(--sp-md) var(--sp-md);
   border-top: 1px solid var(--tg-divider);
   gap: 12px;
 }
@@ -1811,6 +1816,9 @@ body.dark .amenity-item {
   font-size: 14px;
   font-weight: 600;
   color: var(--tg-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sbc-price-meta {
   font-size: 12px;
