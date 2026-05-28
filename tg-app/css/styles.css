@@ -412,14 +412,9 @@ textarea, input { font-family: var(--font); }
 .hero-image {
   position: absolute;
   inset: 0;
-  /* Берёзовая роща на закате: тёмный лес + тёплое золото снизу */
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(8,28,12,.95) 0%, transparent 45%),
-    radial-gradient(ellipse at 78% 40%, rgba(12,35,18,.85) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 15%, rgba(5,18,8,.9) 0%, transparent 38%),
-    radial-gradient(ellipse at 35% 85%, rgba(160,90,15,.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 90%, rgba(180,100,20,.35) 0%, transparent 45%),
-    linear-gradient(175deg, #0a1a0c 0%, #162a18 25%, #1e4025 50%, #6a4010 78%, #b07020 100%);
+  background-image: url('../Photo/hero.png');
+  background-size: cover;
+  background-position: center;
 }
 
 .hero-overlay {
@@ -481,6 +476,13 @@ textarea, input { font-family: var(--font); }
 
 /* Доступность */
 .home-content { padding: var(--sp-md); }
+
+.home-lead {
+  font-size: 15px;
+  color: var(--tg-hint);
+  margin: 4px 0 16px;
+  line-height: 1.5;
+}
 
 .avail-chip {
   display: flex;
@@ -1141,20 +1143,10 @@ body.dark .amenity-item {
    БАНЯ
    ═══════════════════════════════════════════════════════════ */
 
-.sauna-hero, .bikes-hero {
+.bikes-hero {
   height: 180px;
   position: relative;
   overflow: hidden;
-}
-
-.sauna-hero-image {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(145deg, #3d1a0a 0%, #6b3318 40%, #9e5030 70%, #c4723f 100%);
-  background-image:
-    radial-gradient(ellipse at 30% 80%, rgba(61,26,10,.9) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 60%, rgba(156,78,48,.6) 0%, transparent 45%),
-    linear-gradient(155deg, #3d1a0a 0%, #6b2e14 40%, #a04020 70%, #c4682a 100%);
 }
 
 .bikes-hero-image {
@@ -1163,7 +1155,6 @@ body.dark .amenity-item {
   background: linear-gradient(145deg, #1a3a0a 0%, #2d6218 40%, #4a8e30 70%, #6ab84a 100%);
 }
 
-.sauna-hero-info,
 .bikes-hero-info {
   position: absolute;
   bottom: 12px;
@@ -1177,6 +1168,14 @@ body.dark .amenity-item {
   padding: 6px 12px;
   border-radius: 20px;
   text-align: center;
+}
+
+.sauna-hero-info {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tg-hint);
+  padding: 8px 16px;
 }
 
 /* Полоса дат */
@@ -1776,6 +1775,25 @@ body.dark .amenity-item {
   background: var(--tg-bg);
 }
 
+/* ── Статус заявки ──────────────────────────────────────── */
+.order-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--amber-light);
+  color: var(--amber);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(200,116,42,0.2);
+  letter-spacing: 0.2px;
+  margin: 4px 0 8px;
+}
+.dark .order-status-chip {
+  border-color: rgba(224,144,64,0.25);
+}
+
 /* ── Баня: контекст домика ─────────────────────────────── */
 .sauna-booking-context {
   margin-bottom: 4px;
@@ -1915,13 +1933,13 @@ body.dark .amenity-item {
 
 /* Единый transition для каждого интерактивного элемента */
 .btn-primary, .btn-outline, .btn-platform, .btn-open-maps,
-.btn-offer, .btn-copy, .btn-inline,
+.btn-copy, .btn-inline,
 .cal-nav, .tab-btn, .tab-item,
 .date-chip:not(.fully-booked), .slot-chip:not(.booked),
 .duration-chip, .counter-btn,
 .nav-card, .home-info-card, .home-contact,
 .contact-btn, .accordion-header, .more-item, .place-action,
-.offer-skip, .app-back-btn {
+.app-back-btn {
   transition:
     transform .14s cubic-bezier(.34, 1.56, .64, 1),
     box-shadow .15s ease,
@@ -1934,7 +1952,6 @@ body.dark .amenity-item {
 .btn-outline:active         { transform: scale(.97); background: var(--accent-light); }
 .btn-platform:active        { transform: scale(.97); opacity: .85; }
 .btn-open-maps:active       { transform: scale(.98); opacity: .86; }
-.btn-offer:active           { transform: scale(.96); }
 .btn-copy:active            { transform: scale(.88); }
 .btn-inline:active          { opacity: .55; }
 .cal-nav:active             { transform: scale(.86); background: var(--divider); }
@@ -1951,7 +1968,6 @@ body.dark .amenity-item {
 .accordion-header:active    { background: var(--hover-tint); }
 .more-item:active           { transform: scale(.99) translateX(2px); background: var(--hover-tint); }
 .place-action:active        { transform: scale(.78); opacity: .7; }
-.offer-skip:active          { transform: scale(.95); opacity: .55; }
 .app-back-btn:active        { transform: scale(.84); }
 
 /* Hover: отклик для мыши (Desktop / iPad trackpad) */
@@ -2091,134 +2107,6 @@ body.dark .amenity-item {
 
 /* Кнопка «Поделиться» на главной */
 .home-share { margin-top: 4px; }
-
-/* ═══════════════════════════════════════════════════════════
-   ОФФЕР-МОДАЛКА
-   ═══════════════════════════════════════════════════════════ */
-
-.offer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  transition: opacity .3s ease;
-}
-.offer-overlay.visible { opacity: 1; }
-
-.offer-card {
-  background: var(--surface-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--surface-border);
-  border-radius: 24px;
-  padding: 32px 24px 20px;
-  max-width: 360px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
-  transform: translateY(28px) scale(.97);
-  transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
-}
-.offer-overlay.visible .offer-card {
-  transform: translateY(0) scale(1);
-}
-
-.offer-emoji {
-  font-size: 60px;
-  line-height: 1;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.offer-title {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--tg-text);
-  margin: 0 0 8px;
-  line-height: 1.3;
-}
-
-.offer-subtitle {
-  font-size: 14px;
-  color: var(--tg-hint);
-  margin: 0 0 18px;
-  line-height: 1.55;
-}
-
-.offer-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 24px;
-  text-align: left;
-}
-.offer-bullets li {
-  font-size: 14px;
-  color: var(--tg-text);
-  padding: 5px 0 5px 22px;
-  position: relative;
-  line-height: 1.45;
-}
-.offer-bullets li::before {
-  content: '•';
-  position: absolute;
-  left: 6px;
-  color: var(--amber);
-  font-weight: 700;
-}
-
-.btn-offer {
-  display: block;
-  width: 100%;
-  background: #2AABEE;
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 0 16px;
-  height: 52px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 18px rgba(42, 171, 238, 0.4);
-  transition: transform .15s cubic-bezier(.34, 1.56, .64, 1), opacity .1s;
-}
-.btn-offer:active { transform: scale(.96); opacity: .9; }
-
-.offer-skip {
-  background: none;
-  border: none;
-  color: var(--tg-hint);
-  font-size: 14px;
-  padding: 14px 16px 4px;
-  cursor: pointer;
-  width: 100%;
-  transition: opacity .15s;
-}
-.offer-skip:active { opacity: .6; }
-
-.promo-code-block {
-  margin: 12px 0 8px;
-  padding: 14px 24px;
-  background: rgba(76,200,112,0.10);
-  border: 1.5px dashed var(--accent);
-  border-radius: var(--r-md);
-  text-align: center;
-}
-
-.promo-code-text {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 4px;
-  font-family: 'Courier New', monospace;
-}
 
 /* ═══════════════════════════════════════════════════════════
    BOTTOM TAB BAR

@@ -7,8 +7,8 @@
 
 const state = {
   booking:      { checkIn: null, checkOut: null, guests: 2, comment: '' },
-  sauna:        { date: null, slot: null, duration: 2, comment: '', standaloneOverride: false },
-  bikes:        { count: 1, duration: '2h', comment: '' },
+  sauna:        { date: null, slot: null, duration: 3, comment: '', standaloneOverride: false, broom: false },
+  bikes:        { count: 1, sup: 0, duration: '2h', comment: '' },
   cal:          { year: new Date().getFullYear(), month: new Date().getMonth() },
   nearby:       { tab: 'Природа' },
   success:      { type: 'booking' },
@@ -188,11 +188,11 @@ function nightLabel(n) {
 function isWeekendDate(ds) {
   const [y, m, d] = ds.split('-').map(Number);
   const dow = new Date(y, m-1, d).getDay();
-  return dow === 0 || dow === 5 || dow === 6; // пт сб вс
+  return dow === 5 || dow === 6; // пт сб
 }
 
 function calcBooking() {
-  const { checkIn, checkOut, guests } = state.booking;
+  const { checkIn, checkOut } = state.booking;
   if (!checkIn || !checkOut) return null;
 
   const from = new Date(checkIn), to = new Date(checkOut);
@@ -206,18 +206,20 @@ function calcBooking() {
     const ds = fmtDate(d.getFullYear(), d.getMonth()+1, d.getDate());
     nightsTotal += isWeekendDate(ds) ? APP_DATA.house.priceWeekend : APP_DATA.house.priceWeekday;
   }
-  const saunaTotal = guests > APP_DATA.house.capacity
-    ? nights * APP_DATA.sauna.pricePerDay
-    : 0;
-  return { nights, nightsTotal, saunaTotal, total: nightsTotal + saunaTotal };
+  return { nights, nightsTotal, saunaTotal: 0, total: nightsTotal };
 }
 
 function calcSauna() {
-  return APP_DATA.sauna.pricePerHour * state.sauna.duration;
+  return APP_DATA.sauna.pricePerHour * state.sauna.duration + (state.sauna.broom ? APP_DATA.sauna.broomPrice : 0);
+}
+
+function calcSaunaPerDay(nights) {
+  if (nights <= 0) return 0;
+  return APP_DATA.sauna.pricePerDay + Math.max(0, nights - 1) * APP_DATA.sauna.pricePerDayExtra;
 }
 
 function calcBikes() {
-  return APP_DATA.bikes.priceDay * state.bikes.count;
+  return APP_DATA.bikes.priceDay * state.bikes.count + APP_DATA.sup.priceDay * state.bikes.sup;
 }
 
 /* ═══ КОМПОНЕНТЫ ════════════════════════════════════════════ */
@@ -389,9 +391,9 @@ const screens = {
         <div class="hero-image"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <div class="hero-badge">Дмитровский район · 82 км от Москвы</div>
+          <div class="hero-badge">63 км от Москвы · Дмитровский район</div>
           <h1 class="hero-title">A-frame<br>домик</h1>
-          <p class="hero-sub">Сосновый лес · Баня · Канал</p>
+          <p class="hero-sub">Лес · Тишина · Баня</p>
         </div>
       </div>
 
@@ -401,6 +403,8 @@ const screens = {
           Свободно: 26–28 июня (выходные)
         </div>
 
+        <p class="home-lead">Место, куда приезжают, чтобы выдохнуть.</p>
+
         <div class="home-info-card" data-action="navigate" data-screen="house">
           <div class="home-info-row">
             <span class="home-info-label">Цена</span>
@@ -408,7 +412,7 @@ const screens = {
           </div>
           <div class="home-info-row">
             <span class="home-info-label">Гости</span>
-            <span class="home-info-value">до ${APP_DATA.sauna.capacity} человек</span>
+            <span class="home-info-value">до ${APP_DATA.house.capacity} человек</span>
           </div>
           <div class="home-info-row">
             <span class="home-info-label">Площадь</span>
@@ -437,7 +441,9 @@ const screens = {
   house: () => {
     const d = APP_DATA.house;
     const gallery = d.gallery.map(item => `
-      <div class="gallery-item" style="background:${item.gradient}">
+      <div class="gallery-item" style="${item.image
+        ? `background-image:url('${item.image}');background-size:cover;background-position:center`
+        : `background:${item.gradient}`}">
         <div class="gallery-label">${item.label}</div>
       </div>`).join('');
 
@@ -464,7 +470,7 @@ const screens = {
           <div class="house-title-row">
             <div>
               <h2 class="house-name">${d.name}</h2>
-              <p class="house-meta">${d.area} м² · ${d.floors} этажа · до ${APP_DATA.sauna.capacity} гостей</p>
+              <p class="house-meta">${d.area} м² · ${d.floors} этажа · до ${APP_DATA.house.capacity} гостей</p>
             </div>
             <div class="price-badge">от ${fmtPrice(d.priceWeekday)}<span class="per-night">/ночь</span></div>
           </div>
@@ -529,11 +535,6 @@ const screens = {
           <span>${price.nights} ${nightLabel(price.nights)} × стоимость</span>
           <span>${fmtPrice(price.nightsTotal)}</span>
         </div>
-        ${price.saunaTotal ? `
-        <div class="price-row">
-          <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
-          <span>${fmtPrice(price.saunaTotal)}</span>
-        </div>` : ''}
         ${preSauna ? `
         <div class="price-row">
           <span>🛁 Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
@@ -562,9 +563,6 @@ const screens = {
                 <span class="counter-value">${guests} ${guests===1?'человек':guests<5?'человека':'человек'}</span>
                 <button class="counter-btn" data-action="changeGuests" data-delta="1">+</button>
               </div>
-            </div>
-            <div class="sauna-guests-hint" id="sauna-guests-hint"${guests > APP_DATA.house.capacity ? '' : ' style="display:none"'}>
-              🛁 При 5–6 гостях баня включена в стоимость — там +2 места для группы.
             </div>
           </div>
 
@@ -610,18 +608,17 @@ const screens = {
 
     if (hasHouseDates) {
       const nights     = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
-      const saunaPrice = nights * APP_DATA.sauna.pricePerDay;
+      const saunaPrice = calcSaunaPerDay(nights);
+      const saunaMetaLabel = nights > 1
+        ? `${fmtPrice(APP_DATA.sauna.pricePerDay)} 1-я ночь · ${fmtPrice(APP_DATA.sauna.pricePerDayExtra)} × ${nights - 1} след.`
+        : `${fmtPrice(APP_DATA.sauna.pricePerDay)} за ночь`;
       const alreadyAdded = state.currentOrder?.sauna?.perDay;
 
       return `
         <div class="sauna-screen">
           <div class="screen-header"><h2 class="screen-title">Баня</h2></div>
-          <div class="sauna-hero">
-            <div class="sauna-hero-image"></div>
-            <div class="sauna-hero-info">
-              до ${APP_DATA.sauna.capacity} чел. · отдельный домик 6×4 м
-            </div>
-          </div>
+          ${renderSaunaGallery()}
+          <div class="sauna-hero-info">до ${APP_DATA.sauna.capacity} чел. · отдельный домик 6×4 м</div>
           <div class="screen-content">
             <div class="section-card">
               <div class="sauna-booking-context">
@@ -631,7 +628,7 @@ const screens = {
               <div class="sbc-price-row">
                 <div class="sbc-price-left">
                   <div class="sbc-price-name">🛁 Баня — весь период</div>
-                  <div class="sbc-price-meta">${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки × ${nights} ${nightLabel(nights)}</div>
+                  <div class="sbc-price-meta">${saunaMetaLabel}</div>
                 </div>
                 <div class="sbc-price-total">${fmtPrice(saunaPrice)}</div>
               </div>
@@ -669,12 +666,8 @@ const screens = {
       <div class="sauna-screen">
         <div class="screen-header"><h2 class="screen-title">Баня</h2></div>
 
-        <div class="sauna-hero">
-          <div class="sauna-hero-image"></div>
-          <div class="sauna-hero-info">
-            ${APP_DATA.sauna.pricePerHour.toLocaleString('ru-RU')} ₽/час · до ${APP_DATA.sauna.capacity} чел. · мин. 2 часа
-          </div>
-        </div>
+        ${renderSaunaGallery()}
+        <div class="sauna-hero-info">${APP_DATA.sauna.pricePerHour.toLocaleString('ru-RU')} ₽/час · до ${APP_DATA.sauna.capacity} чел. · мин. 3 часа</div>
 
         <div class="screen-content">
           <div class="section-card">
@@ -690,9 +683,19 @@ const screens = {
           <div class="section-card">
             <h3 class="section-title">Длительность</h3>
             <div class="duration-picker">
-              ${[2,3,4].map(n => `
+              ${[3,4,5].map(n => `
                 <div class="duration-chip${duration===n?' selected':''}"
-                     data-action="selectDuration" data-duration="${n}">${n} часа</div>`).join('')}
+                     data-action="selectDuration" data-duration="${n}">${n} ${n===5?'часов':'часа'}</div>`).join('')}
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h3 class="section-title">Веник <span class="optional">(если нет своего)</span></h3>
+            <div class="duration-picker">
+              <div class="duration-chip${!state.sauna.broom ? ' selected' : ''}"
+                   data-action="toggleSaunaBroom" data-broom="0">Свой</div>
+              <div class="duration-chip${state.sauna.broom ? ' selected' : ''}"
+                   data-action="toggleSaunaBroom" data-broom="1">+${fmtPrice(APP_DATA.sauna.broomPrice)}</div>
             </div>
           </div>
 
@@ -752,24 +755,30 @@ const screens = {
         </div>
       </div>` : `
       <div class="booking-summary">
+        ${count > 0 ? `
         <div class="summary-row">
           <span id="bike-sum-label">${count} велосипед${count>1?'а':''} · весь день</span>
-          <span class="summary-price" id="bike-sum-price">${fmtPrice(bikesTotal)}</span>
+          <span class="summary-price" id="bike-sum-price">${fmtPrice(APP_DATA.bikes.priceDay * count)}</span>
+        </div>` : '<span id="bike-sum-label" style="display:none"></span><span id="bike-sum-price" style="display:none"></span>'}
+        <div class="summary-row" id="sup-sum-row"${state.bikes.sup > 0 ? '' : ' style="display:none"'}>
+          <span id="sup-sum-label">${state.bikes.sup} SUP · весь день</span>
+          <span class="summary-price" id="sup-sum-price">${fmtPrice(APP_DATA.sup.priceDay * state.bikes.sup)}</span>
         </div>
       </div>`;
 
+    const hasItems = state.bikes.count > 0 || state.bikes.sup > 0;
     const btnLabel = inFlow
       ? `Завершить бронирование · ${fmtPrice(grandTotal)}`
-      : `Забронировать · ${fmtPrice(bikesTotal)}`;
+      : (hasItems ? `Забронировать · ${fmtPrice(bikesTotal)}` : 'Выберите велосипед или SUP');
 
     return `
       <div class="bikes-screen">
-        <div class="screen-header"><h2 class="screen-title">Велосипеды</h2></div>
+        <div class="screen-header"><h2 class="screen-title">Велосипеды и SUP</h2></div>
 
         <div class="bikes-hero">
           <div class="bikes-hero-image"></div>
           <div class="bikes-hero-info">
-            ${APP_DATA.bikes.available} велосипеда · ${APP_DATA.bikes.priceDay} ₽/день
+            ${APP_DATA.bikes.available} велика · ${APP_DATA.bikes.priceDay} ₽/день · SUP ${APP_DATA.sup.priceDay} ₽/день
           </div>
         </div>
 
@@ -778,12 +787,23 @@ const screens = {
             <div class="counter-row">
               <div>
                 <div class="counter-label">Велосипедов</div>
-                <div class="counter-hint">Максимум ${APP_DATA.bikes.available}</div>
+                <div class="counter-hint">Максимум ${APP_DATA.bikes.available} · ${APP_DATA.bikes.priceDay} ₽/день</div>
               </div>
               <div class="counter">
                 <button class="counter-btn" data-action="changeBikeCount" data-delta="-1">−</button>
                 <span class="counter-value">${count}</span>
                 <button class="counter-btn" data-action="changeBikeCount" data-delta="1">+</button>
+              </div>
+            </div>
+            <div class="counter-row" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--divider)">
+              <div>
+                <div class="counter-label">SUP-борд</div>
+                <div class="counter-hint">Максимум ${APP_DATA.sup.available} · ${APP_DATA.sup.priceDay} ₽/день</div>
+              </div>
+              <div class="counter">
+                <button class="counter-btn" data-action="changeSUPCount" data-delta="-1">−</button>
+                <span class="counter-value-sup">${state.bikes.sup}</span>
+                <button class="counter-btn" data-action="changeSUPCount" data-delta="1">+</button>
               </div>
             </div>
           </div>
@@ -810,7 +830,8 @@ const screens = {
               placeholder="Нужен ли детский велосипед, шлем, есть вопросы…">${state.bikes.comment}</textarea>
           </div>
 
-          <button class="btn-primary" id="bikes-submit-btn" data-action="submitBikes">
+          <button class="btn-primary" id="bikes-submit-btn" data-action="submitBikes"
+            ${hasItems || inFlow ? '' : 'disabled'}>
             ${btnLabel}
           </button>
         </div>
@@ -971,41 +992,13 @@ const screens = {
 
   /* ── Шаг 1: предложение бани (после бронирования домика) ── */
   upsellSauna: () => {
-    const { guests } = state.booking;
-    const needsSauna = guests > APP_DATA.house.capacity;
     const { house } = state.currentOrder;
     const nights = house?.nights || 0;
-    const saunaPrice = nights * APP_DATA.sauna.pricePerDay;
+    const saunaPrice = calcSaunaPerDay(nights);
+    const saunaLabel = nights > 1
+      ? `${fmtPrice(APP_DATA.sauna.pricePerDay)} 1-я ночь · ${fmtPrice(APP_DATA.sauna.pricePerDayExtra)} × ${nights - 1} след.`
+      : `${fmtPrice(APP_DATA.sauna.pricePerDay)} за ночь`;
 
-    if (needsSauna) {
-      // Баня уже включена в цену (guests > 4) — только информируем
-      return `
-        <div class="upsell-screen">
-          <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
-          <div class="screen-content">
-            <p class="upsell-step">Шаг 1 из 2</p>
-            <div class="upsell-required-block">
-              <div class="upsell-required-icon">🛁</div>
-              <div class="upsell-required-text">
-                <strong>Баня включена на весь период</strong><br>
-                Для ${guests} гостей нужна баня — там +2 места.
-              </div>
-            </div>
-            <div class="upsell-day-price section-card">
-              <div class="udp-row">
-                <span>${nights} ${nightLabel(nights)} × ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
-                <span>${fmtPrice(saunaPrice)}</span>
-              </div>
-              <div class="udp-note">Уже учтена в итоговой сумме заявки</div>
-            </div>
-            <button class="btn-primary" data-action="skipToUpsellBikes">
-              Всё верно, далее →
-            </button>
-          </div>
-        </div>`;
-    }
-
-    // Баня опциональна (guests ≤ 4) — предлагаем добавить посуточно
     return `
       <div class="upsell-screen">
         <div class="screen-header"><h2 class="screen-title">К поездке</h2></div>
@@ -1014,7 +1007,7 @@ const screens = {
           <p class="upsell-invite">Хотите добавить баню?</p>
           <div class="upsell-day-price section-card">
             <div class="udp-row">
-              <span>${nights} ${nightLabel(nights)} × ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
+              <span>${saunaLabel}</span>
               <span>${fmtPrice(saunaPrice)}</span>
             </div>
             <div class="udp-note">На всё время вашего пребывания · до ${APP_DATA.sauna.capacity} чел.</div>
@@ -1066,8 +1059,8 @@ const screens = {
           <div class="upsell-card" data-action="navigate" data-screen="bikes">
             <span class="upsell-icon">🚴</span>
             <div class="upsell-body">
-              <div class="upsell-name">Велосипеды</div>
-              <div class="upsell-meta">${APP_DATA.bikes.priceDay.toLocaleString('ru-RU')} ₽/день · ${APP_DATA.bikes.available} велика</div>
+              <div class="upsell-name">Велосипеды и SUP</div>
+              <div class="upsell-meta">${APP_DATA.bikes.priceDay.toLocaleString('ru-RU')} ₽/вел. · SUP ${APP_DATA.sup.priceDay} ₽/сут. · ${APP_DATA.bikes.available} велика</div>
             </div>
             <span class="upsell-arrow">›</span>
           </div>
@@ -1131,10 +1124,18 @@ const screens = {
       items.push({ icon: '🛁', name: 'Баня', meta, price: fmtPrice(sauna.price) });
     }
     if (bikes) {
+      const bikeName = bikes.count > 0 && bikes.sup > 0 ? 'Велосипеды + SUP'
+        : bikes.sup > 0 ? 'SUP-борд'
+        : 'Велосипеды';
+      const bikeMeta = [
+        bikes.count > 0 ? `${bikes.count} вел.` : null,
+        bikes.sup > 0   ? `${bikes.sup} SUP`    : null,
+        'весь день',
+      ].filter(Boolean).join(' · ');
       items.push({
         icon:  '🚴',
-        name:  'Велосипеды',
-        meta:  `${bikes.count} шт. · весь день`,
+        name:  bikeName,
+        meta:  bikeMeta,
         price: fmtPrice(bikes.price),
       });
     }
@@ -1144,7 +1145,7 @@ const screens = {
 
     const orderCard = items.length ? `
       <div class="order-card">
-        <div class="order-card-title">Что забронировано</div>
+        <div class="order-card-title">Ваша заявка</div>
         ${items.map(it => `
           <div class="order-item">
             <span class="order-item-icon">${it.icon}</span>
@@ -1166,6 +1167,7 @@ const screens = {
         <div class="success-icon">${t.icon}</div>
         <div class="success-checkmark">✓</div>
         <h2 class="success-title">${t.title}</h2>
+        <div class="order-status-chip">⏳ Ожидает подтверждения</div>
         ${orderCard}
         <p class="success-note">${t.note}</p>
         <button class="btn-primary success-btn" data-action="goHome">На главную</button>
@@ -1202,7 +1204,7 @@ function setupScreenButtons(screenId, params) {
       const hasHouseDates = checkIn && checkOut && !state.sauna.standaloneOverride;
       if (hasHouseDates) {
         const nights     = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
-        const saunaPrice = nights * APP_DATA.sauna.pricePerDay;
+        const saunaPrice = calcSaunaPerDay(nights);
         const alreadyAdded = state.currentOrder?.sauna?.perDay;
         if (!alreadyAdded) {
           setMainButton(`Добавить к брони · ${fmtPrice(saunaPrice)}`, () => actions.addSaunaPreBooking());
@@ -1222,8 +1224,11 @@ function setupScreenButtons(screenId, params) {
       const prevTotal  = (state.currentOrder?.house?.price || 0) + (state.currentOrder?.sauna?.price || 0);
       const grandTotal = prevTotal + bikesTotal;
       const inFlow     = state.bookingFlow;
-      const txt = inFlow ? `Завершить · ${fmtPrice(grandTotal)}` : `Забронировать · ${fmtPrice(bikesTotal)}`;
-      setMainButton(txt, submitBikes, true);
+      const hasItems   = state.bikes.count > 0 || state.bikes.sup > 0;
+      const txt = inFlow
+        ? `Завершить · ${fmtPrice(grandTotal)}`
+        : (hasItems ? `Забронировать · ${fmtPrice(bikesTotal)}` : 'Выберите велосипед или SUP');
+      setMainButton(txt, submitBikes, inFlow || hasItems);
       break;
     }
 
@@ -1244,8 +1249,21 @@ function setupScreenButtons(screenId, params) {
 /* ═══ ХУКИ ПОСЛЕ РЕНДЕРА ════════════════════════════════════ */
 
 function afterRender(screenId) {
-  if (screenId === 'house')   setupGallery();
+  if (screenId === 'house' || screenId === 'sauna') setupGallery();
   if (screenId === 'booking') setupCommentSync();
+}
+
+function renderSaunaGallery() {
+  const imgs = APP_DATA.sauna.gallery;
+  return `
+    <div class="gallery-wrap">
+      <div class="gallery" id="gallery">
+        ${imgs.map(src => `<div class="gallery-item" style="background-image:url('${src}');background-size:cover;background-position:center"></div>`).join('')}
+      </div>
+      <div class="gallery-dots" id="gallery-dots">
+        ${imgs.map((_, i) => `<div class="dot${i === 0 ? ' active' : ''}"></div>`).join('')}
+      </div>
+    </div>`;
 }
 
 function setupGallery() {
@@ -1257,6 +1275,33 @@ function setupGallery() {
     const idx = Math.round(gallery.scrollLeft / gallery.clientWidth);
     dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
   }, { passive: true });
+
+  let isDragging = false, startX = 0, startLeft = 0;
+
+  gallery.addEventListener('mousedown', e => {
+    isDragging = true;
+    startX = e.pageX;
+    startLeft = gallery.scrollLeft;
+    gallery.style.cursor = 'grabbing';
+    gallery.style.scrollSnapType = 'none';
+  });
+
+  const endDrag = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    gallery.style.cursor = '';
+    gallery.style.scrollSnapType = 'x mandatory';
+    const idx = Math.round(gallery.scrollLeft / gallery.clientWidth);
+    gallery.scrollTo({ left: idx * gallery.clientWidth, behavior: 'smooth' });
+  };
+
+  gallery.addEventListener('mouseup', endDrag);
+  gallery.addEventListener('mouseleave', endDrag);
+  gallery.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    e.preventDefault();
+    gallery.scrollLeft = startLeft - (e.pageX - startX);
+  });
 }
 
 function setupCommentSync() {
@@ -1265,6 +1310,14 @@ function setupCommentSync() {
 }
 
 /* ═══ САБМИТЫ ═══════════════════════════════════════════════ */
+
+function notifyOwner(order, comment) {
+  fetch('/.netlify/functions/send-order', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ order, comment, user: tg?.initDataUnsafe?.user || null }),
+  }).catch(() => {});
+}
 
 function submitBooking() {
   const ta = document.getElementById('booking-comment');
@@ -1312,17 +1365,29 @@ function submitSauna() {
 function submitBikes() {
   const ta = document.getElementById('bikes-comment');
   if (ta) state.bikes.comment = ta.value;
+  const hasBikes = state.bikes.count > 0 || state.bikes.sup > 0;
+  if (!hasBikes && !state.bookingFlow && !state.currentOrder.sauna) return;
   hapticNotify('success');
   const type = state.bookingFlow ? 'booking' : (state.currentOrder.sauna ? 'sauna' : 'bikes');
-  const bikesData = { count: state.bikes.count, price: calcBikes() };
+  const bikesData = hasBikes ? { count: state.bikes.count, sup: state.bikes.sup, price: calcBikes() } : null;
   if (state.bookingFlow || state.currentOrder.sauna) {
     state.currentOrder.bikes = bikesData;
   } else {
     state.currentOrder = { house: null, sauna: null, bikes: bikesData };
+    notifyOwner(state.currentOrder, state.bikes.comment);
   }
   state.bookingFlow = false;
+  resetFormState();
   router.stack = [{ id: 'home', params: {} }];
   router.navigate('success', { type });
+}
+
+function resetFormState() {
+  state.booking     = { checkIn: null, checkOut: null, guests: 2, comment: '' };
+  state.sauna       = { date: null, slot: null, duration: 3, comment: '', standaloneOverride: false, broom: false };
+  state.bikes       = { count: 1, sup: 0, duration: '2h', comment: '' };
+  state.cal         = { year: new Date().getFullYear(), month: new Date().getMonth() };
+  state.orderComment = '';
 }
 
 /* ═══ ОБНОВЛЕНИЯ UI БЕЗ ПОЛНОГО РЕБИЛДА ЭКРАНА ══════════════ */
@@ -1379,11 +1444,6 @@ function refreshBookingPrice() {
           <span>${price.nights} ${nightLabel(price.nights)} × стоимость</span>
           <span>${fmtPrice(price.nightsTotal)}</span>
         </div>
-        ${price.saunaTotal ? `
-        <div class="price-row">
-          <span>🛁 Баня · ${fmtPrice(APP_DATA.sauna.pricePerDay)}/сутки</span>
-          <span>${fmtPrice(price.saunaTotal)}</span>
-        </div>` : ''}
         ${preSauna ? `
         <div class="price-row">
           <span>🛁 Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
@@ -1448,16 +1508,30 @@ function refreshSaunaSummary() {
 }
 
 function refreshBikesSummary() {
-  const { count } = state.bikes;
+  const { count, sup } = state.bikes;
   const inFlow     = state.bookingFlow;
   const bikesTotal = calcBikes();
   const prevTotal  = (state.currentOrder?.house?.price || 0) + (state.currentOrder?.sauna?.price || 0);
   const grandTotal = prevTotal + bikesTotal;
+  const hasItems   = count > 0 || sup > 0;
 
   const lbl = document.getElementById('bike-sum-label');
   const pr  = document.getElementById('bike-sum-price');
-  if (lbl) lbl.textContent = `${count} велосипед${count>1?'а':''} · весь день`;
-  if (pr)  pr.textContent  = fmtPrice(bikesTotal);
+  if (lbl) {
+    lbl.textContent = `${count} велосипед${count>1?'а':''} · весь день`;
+    lbl.closest('.summary-row').style.display = count > 0 ? '' : 'none';
+  }
+  if (pr)  pr.textContent  = fmtPrice(APP_DATA.bikes.priceDay * count);
+
+  const supRow = document.getElementById('sup-sum-row');
+  const supLbl = document.getElementById('sup-sum-label');
+  const supPr  = document.getElementById('sup-sum-price');
+  if (supRow) supRow.style.display = sup > 0 ? '' : 'none';
+  if (supLbl) supLbl.textContent = `${sup} SUP · весь день`;
+  if (supPr)  supPr.textContent  = fmtPrice(APP_DATA.sup.priceDay * sup);
+
+  const supCountEl = document.querySelector('.counter-value-sup');
+  if (supCountEl) supCountEl.textContent = sup;
 
   const grandEl = document.getElementById('bikes-grand-total');
   if (grandEl) {
@@ -1467,47 +1541,11 @@ function refreshBikesSummary() {
 
   const btnLabel = inFlow
     ? `Завершить бронирование · ${fmtPrice(grandTotal)}`
-    : `Забронировать · ${fmtPrice(bikesTotal)}`;
+    : (hasItems ? `Забронировать · ${fmtPrice(bikesTotal)}` : 'Выберите велосипед или SUP');
   const btn = document.getElementById('bikes-submit-btn');
-  if (btn) btn.textContent = btnLabel;
+  if (btn) { btn.textContent = btnLabel; btn.disabled = !inFlow && !hasItems; }
 
-  setMainButton(btnLabel, submitBikes, true);
-}
-
-/* ═══ ОФФЕР-МОДАЛКА ════════════════════════════════════════ */
-
-const OFFER_KEY = 'repka_offer_shown';
-
-function showOfferModal() {
-  if (localStorage.getItem(OFFER_KEY)) return;
-
-  const modal = document.createElement('div');
-  modal.id = 'offer-modal';
-  modal.className = 'offer-overlay';
-  modal.innerHTML = `
-    <div class="offer-card">
-      <span class="offer-emoji">🎁</span>
-      <h2 class="offer-title">Скидка 10% на первое бронирование</h2>
-      <p class="offer-subtitle">Подпишитесь на бота — получите промокод сразу в чат</p>
-      <ul class="offer-bullets">
-        <li>Напомним о заезде за день</li>
-        <li>Первыми узнаёте о свободных датах</li>
-        <li>Эксклюзивные акции для подписчиков</li>
-      </ul>
-      <button class="btn-offer" data-action="acceptOffer">Получить скидку 10%</button>
-      <button class="offer-skip" data-action="closeOffer">Пропустить</button>
-    </div>`;
-
-  document.getElementById('app').appendChild(modal);
-  requestAnimationFrame(() => modal.classList.add('visible'));
-}
-
-function closeOfferModal() {
-  localStorage.setItem(OFFER_KEY, '1');
-  const modal = document.getElementById('offer-modal');
-  if (!modal) return;
-  modal.classList.remove('visible');
-  modal.addEventListener('transitionend', () => modal.remove(), { once: true });
+  setMainButton(btnLabel, submitBikes, inFlow || hasItems);
 }
 
 /* ═══ ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ══════════════════════════════════ */
@@ -1541,7 +1579,7 @@ const actions = {
     state.currentOrder.sauna = {
       perDay:   true,
       nights,
-      price:    nights * APP_DATA.sauna.pricePerDay,
+      price:    calcSaunaPerDay(nights),
       date:     null,
       slot:     null,
       duration: null,
@@ -1557,7 +1595,7 @@ const actions = {
     if (ta) state.sauna.comment = ta.value;
     state.currentOrder = { ...state.currentOrder, sauna: {
       perDay: true, nights,
-      price:  nights * APP_DATA.sauna.pricePerDay,
+      price:  calcSaunaPerDay(nights),
       date: null, slot: null, duration: null,
     }};
     router.navigate('booking');
@@ -1584,9 +1622,11 @@ const actions = {
   finalSubmit() {
     const ta = document.getElementById('order-comment');
     if (ta) state.orderComment = ta.value;
+    notifyOwner(state.currentOrder, state.orderComment);
     hapticNotify('success');
     const type = state.bookingFlow ? 'booking' : 'sauna';
     state.bookingFlow = false;
+    resetFormState();
     router.stack = [{ id: 'home', params: {} }];
     router.navigate('success', { type });
   },
@@ -1653,15 +1693,13 @@ const actions = {
   },
 
   changeGuests({ delta }) {
-    const max = APP_DATA.sauna.capacity;
+    const max = APP_DATA.house.capacity;
     const nv  = Math.max(1, Math.min(max, state.booking.guests + parseInt(delta)));
     if (nv === state.booking.guests) return;
     state.booking.guests = nv;
     haptic('light');
     const el = document.querySelector('.counter-value');
     if (el) el.textContent = `${nv} ${nv===1?'человек':nv<5?'человека':'человек'}`;
-    const hint = document.getElementById('sauna-guests-hint');
-    if (hint) hint.style.display = nv > APP_DATA.house.capacity ? '' : 'none';
     if (state.booking.checkIn && state.booking.checkOut) refreshBookingPrice();
   },
 
@@ -1704,7 +1742,7 @@ const actions = {
   /* Баня: длительность */
   selectDuration({ duration }) {
     state.sauna.duration = parseInt(duration);
-    document.querySelectorAll('.duration-chip').forEach(el =>
+    document.querySelectorAll('[data-action="selectDuration"]').forEach(el =>
       el.classList.toggle('selected', parseInt(el.dataset.duration) === state.sauna.duration));
     refreshSaunaSummary();
   },
@@ -1719,6 +1757,24 @@ const actions = {
     const el = document.querySelector('.counter-value');
     if (el) el.textContent = nv;
     refreshBikesSummary();
+  },
+
+  /* SUP: количество */
+  changeSUPCount({ delta }) {
+    const max = APP_DATA.sup.available;
+    const nv  = Math.max(0, Math.min(max, state.bikes.sup + parseInt(delta)));
+    if (nv === state.bikes.sup) return;
+    state.bikes.sup = nv;
+    haptic('light');
+    refreshBikesSummary();
+  },
+
+  /* Баня: веник */
+  toggleSaunaBroom({ broom }) {
+    state.sauna.broom = broom === '1';
+    document.querySelectorAll('[data-action="toggleSaunaBroom"]').forEach(el =>
+      el.classList.toggle('selected', el.dataset.broom === broom));
+    refreshSaunaSummary();
   },
 
   /* Велосипеды: длительность */
@@ -1802,7 +1858,6 @@ const actions = {
       const route = START_ROUTES[pending];
       if (route) { router.navigate(route); return; }
     }
-    setTimeout(showOfferModal, 500);
   },
 
   share() {
@@ -1818,36 +1873,6 @@ const actions = {
     }
   },
 
-  acceptOffer() {
-    localStorage.setItem(OFFER_KEY, '1');
-    hapticNotify('success');
-    const card = document.querySelector('#offer-modal .offer-card');
-    if (!card) return;
-    card.innerHTML = `
-      <span class="offer-emoji">✅</span>
-      <h2 class="offer-title">Промокод готов!</h2>
-      <p class="offer-subtitle">Назовите его хозяину при оформлении брони</p>
-      <div class="promo-code-block">
-        <span class="promo-code-text">FIRST10</span>
-      </div>
-      <button class="btn-offer" data-action="copyPromo">Скопировать промокод</button>
-      <button class="offer-skip" data-action="closeOffer">Закрыть</button>`;
-  },
-
-  copyPromo() {
-    navigator.clipboard?.writeText('FIRST10').then(() => {
-      hapticNotify('success');
-      const btn = document.querySelector('#offer-modal .btn-offer');
-      if (btn) {
-        btn.textContent = 'Скопировано ✓';
-        setTimeout(() => closeOfferModal(), 1400);
-      }
-    }).catch(() => closeOfferModal());
-  },
-
-  closeOffer() {
-    closeOfferModal();
-  },
 };
 
 /* ═══ ДЕЛЕГИРОВАНИЕ КЛИКОВ ═══════════════════════════════════ */
