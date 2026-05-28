@@ -968,7 +968,7 @@ const screens = {
           </div>
           <div class="more-item" data-action="navigate" data-screen="bikes">
             <span class="more-item-icon">🚴</span>
-            <span class="more-item-label">Велосипеды</span>
+            <span class="more-item-label">Велосипеды и SUP</span>
             <span class="more-item-arrow">›</span>
           </div>
           <div class="more-item" data-action="navigate" data-screen="nearby">

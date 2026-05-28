@@ -1152,7 +1152,9 @@ body.dark .amenity-item {
 .bikes-hero-image {
   position: absolute;
   inset: 0;
-  background: linear-gradient(145deg, #1a3a0a 0%, #2d6218 40%, #4a8e30 70%, #6ab84a 100%);
+  background-image: url('../Photo/Oth2.png');
+  background-size: cover;
+  background-position: center;
 }
 
 .bikes-hero-info {
