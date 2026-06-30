@@ -1881,7 +1881,7 @@ const actions = {
     const pending = sessionStorage.getItem('repka_pending_route');
     if (pending) {
       sessionStorage.removeItem('repka_pending_route');
-      const route = START_ROUTES[pending];
+      const route = resolveParam(pending);
       if (route) { router.navigate(route); return; }
     }
   },
@@ -1933,6 +1933,27 @@ const START_ROUTES = {
   домик:   'booking',
 };
 
+// Resolves start param to a route, optionally hydrating state from base64 JSON.
+function resolveParam(param) {
+  if (!param) return null;
+
+  // Try base64 JSON prefill sent from landing page (e.g. ?startapp=eyJjaGVja0luIjoi...)
+  try {
+    const data = JSON.parse(atob(param));
+    if (data && typeof data === 'object' && data.checkIn) {
+      state.booking.checkIn  = data.checkIn;
+      state.booking.checkOut = data.checkOut || null;
+      state.booking.guests   = Number(data.guests) || 2;
+      // Scroll calendar to check-in month
+      const d = new Date(data.checkIn);
+      if (!isNaN(d)) { state.cal.year = d.getFullYear(); state.cal.month = d.getMonth(); }
+      return 'booking';
+    }
+  } catch (_) { /* plain route string */ }
+
+  return START_ROUTES[param?.toLowerCase()] || null;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initTelegram();
   setupEvents();
@@ -1947,7 +1968,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (param) sessionStorage.setItem('repka_pending_route', param);
   } else {
     router.reset();
-    const route = START_ROUTES[param];
+    const route = resolveParam(param);
     if (route) router.navigate(route);
   }
 });
