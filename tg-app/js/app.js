@@ -222,7 +222,7 @@ function calcBooking() {
 
   const from = new Date(checkIn), to = new Date(checkOut);
   const nights = Math.round((to - from) / 86400000);
-  if (nights <= 0) return null;
+  if (nights < 2) return null;
 
   let nightsTotal = 0;
   for (let i = 0; i < nights; i++) {
@@ -311,6 +311,7 @@ function renderCalendar() {
         <div class="legend-item"><div class="l-dot booked-dot"></div><span>Занято</span></div>
         <div class="legend-item"><div class="l-dot today-dot"></div><span>Сегодня</span></div>
         <div class="legend-item"><div class="l-dot sel-dot"></div><span>Выбрано</span></div>
+        <span class="cal-min-hint">мин. 2 ночи</span>
       </div>
     </div>`;
 }
@@ -1677,19 +1678,25 @@ const actions = {
       state.booking.checkIn  = date;
       state.booking.checkOut = null;
     } else if (date > checkIn) {
-      // Проверяем, нет ли занятых дат в диапазоне
-      let conflict = false;
-      const from = new Date(checkIn);
-      const to   = new Date(date);
-      for (let d = new Date(from); d < to; d.setDate(d.getDate()+1)) {
-        const ds = fmtDate(d.getFullYear(), d.getMonth()+1, d.getDate());
-        if (APP_DATA.unavailableDates.includes(ds)) { conflict = true; break; }
-      }
-      if (conflict) {
+      const nights = Math.round((new Date(date) - new Date(checkIn)) / 86400000);
+      if (nights < 2) {
         state.booking.checkIn  = date;
         state.booking.checkOut = null;
       } else {
-        state.booking.checkOut = date;
+        // Проверяем, нет ли занятых дат в диапазоне
+        let conflict = false;
+        const from = new Date(checkIn);
+        const to   = new Date(date);
+        for (let d = new Date(from); d < to; d.setDate(d.getDate()+1)) {
+          const ds = fmtDate(d.getFullYear(), d.getMonth()+1, d.getDate());
+          if (APP_DATA.unavailableDates.includes(ds)) { conflict = true; break; }
+        }
+        if (conflict) {
+          state.booking.checkIn  = date;
+          state.booking.checkOut = null;
+        } else {
+          state.booking.checkOut = date;
+        }
       }
     } else {
       state.booking.checkIn  = date;
@@ -1954,10 +1961,22 @@ function resolveParam(param) {
   return START_ROUTES[param?.toLowerCase()] || null;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+async function fetchAvitoCalendar() {
+  try {
+    const r = await fetch('/api/calendar');
+    if (!r.ok) return;
+    const { dates } = await r.json();
+    if (Array.isArray(dates) && dates.length) {
+      APP_DATA.unavailableDates = [...new Set([...APP_DATA.unavailableDates, ...dates])];
+    }
+  } catch (_) {}
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
   initTelegram();
   setupEvents();
   renderTabBar();
+  await fetchAvitoCalendar();
 
   const param = getStartParam();
 

@@ -904,6 +904,12 @@ body.dark .amenity-item {
   gap: var(--sp-md);
   padding: 10px 4px 4px;
   justify-content: center;
+  align-items: center;
+}
+.cal-min-hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-left: auto;
 }
 
 .legend-item {
