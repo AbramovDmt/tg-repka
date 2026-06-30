@@ -1046,7 +1046,7 @@ body.dark .amenity-item {
 
 .comment-input {
   width: 100%;
-  min-height: 80px;
+  height: 70px;
   padding: 8px var(--sp-md) var(--sp-md);
   background: transparent;
   border: none;
@@ -1055,6 +1055,7 @@ body.dark .amenity-item {
   color: var(--tg-text);
   outline: none;
   line-height: 1.5;
+  overflow-y: auto;
 }
 
 /* Политика отмены */
