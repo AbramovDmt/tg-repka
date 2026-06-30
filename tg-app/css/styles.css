@@ -2231,16 +2231,9 @@ body.dark .amenity-item {
 .home-info-label { color: var(--tg-hint); }
 .home-info-value { font-weight: 600; }
 
-.home-info-cta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px var(--sp-md);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-  border-top: 1px solid var(--divider);
+.home-details-btn {
+  width: 100%;
+  margin-bottom: var(--sp-sm);
 }
 
 /* ═══════════════════════════════════════════════════════════

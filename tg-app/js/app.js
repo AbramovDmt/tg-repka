@@ -441,8 +441,11 @@ const screens = {
             <span class="home-info-label">Заезд / выезд</span>
             <span class="home-info-value">с ${d.checkIn} / до ${d.checkOut}</span>
           </div>
-          <div class="home-info-cta"><span>Подробнее о домике</span><span>›</span></div>
         </div>
+
+        <button class="btn-outline home-details-btn" data-action="navigate" data-screen="house">
+          Подробнее о домике
+        </button>
 
         <button class="btn-primary home-book-btn" data-action="navigate" data-screen="booking">
           Забронировать
