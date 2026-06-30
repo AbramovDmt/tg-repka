@@ -587,7 +587,7 @@ const screens = {
           <div class="section-card">
             <label class="comment-label">Вопрос или пожелание хозяину <span class="optional">(необязательно)</span></label>
             <textarea class="comment-input" id="booking-comment"
-              placeholder="Позвоните за час до заезда / приедем поздно / нужна кроватка…">${comment}</textarea>
+              placeholder="Поздний заезд, нужна кроватка, вопрос…">${comment}</textarea>
             <div class="pets-hint">
               <span>Едете с питомцем? Напишите об этом — обсуждается индивидуально. Залог с животными 10 000 ₽, на участке не выгуливать.</span>
             </div>

@@ -1036,11 +1036,9 @@ body.dark .amenity-item {
 /* Комментарий */
 .comment-label {
   display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--tg-hint);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--tg-text);
   padding: 12px var(--sp-md) 6px;
 }
 
