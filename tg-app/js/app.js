@@ -503,6 +503,14 @@ const screens = {
             <div class="amenities-grid">${amenities}</div>
           </div>
 
+          <div class="section-card bring-own-card">
+            <h3 class="section-title">Возьмите с собой</h3>
+            <ul class="rules-list" style="padding-bottom:12px">
+              <li>Еда и напитки — магазин в 3 км (5 мин на авто)</li>
+              <li>Личные средства гигиены (зубная щётка, бритва и т.д.)</li>
+            </ul>
+          </div>
+
           <div class="section-card">
             <h3 class="section-title">Заезд и выезд</h3>
             <div class="checkin-row">
