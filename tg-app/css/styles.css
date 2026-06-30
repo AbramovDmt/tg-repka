@@ -2235,10 +2235,12 @@ body.dark .amenity-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px var(--sp-md);
-  font-size: 14px;
+  padding: 14px var(--sp-md);
+  font-size: 15px;
   font-weight: 600;
   color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border-top: 1px solid var(--divider);
 }
 
 /* ═══════════════════════════════════════════════════════════
