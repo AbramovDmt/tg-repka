@@ -10,24 +10,24 @@
   --tg-secondary-bg: #EEE9E1;
   --tg-text:         #1C2B1E;
   --tg-hint:         #6E8064;
-  --tg-link:         #2A7A42;
-  --tg-button:       #35A858;
+  --tg-link:         #315040;
+  --tg-button:       #3C5948;
   --tg-button-text:  #FFFFFF;
 
-  /* Природный акцент — лесной зелёный */
-  --accent:          #35A858;
-  --accent-hover:    #2A8A48;
-  --accent-light:    rgba(53,168,88,0.12);
+  /* Природный акцент — глубокий лесной (приглушённый) */
+  --accent:          #3C5948;
+  --accent-hover:    #315040;
+  --accent-light:    rgba(60,89,72,0.12);
   --accent-text:     #FFFFFF;
 
-  /* Янтарный — огонь, дерево, баня */
-  --amber:           #C8742A;
-  --amber-light:     rgba(200,116,42,0.12);
+  /* Янтарный — тёмная терракота */
+  --amber:           #7A4728;
+  --amber-light:     rgba(122,71,40,0.12);
 
   /* Семантика */
   --danger:          #D04040;
   --warning:         #C08020;
-  --success:         #35A858;
+  --success:         #3C5948;
 
   /* Компоненты */
   --card-bg:         #FFFFFF;
@@ -39,12 +39,12 @@
   /* Стеклянные карточки */
   --glass-bg:               rgba(255,255,255,0.80);
   --glass-border:           rgba(60,80,50,0.11);
-  --glass-amber-bg:         rgba(255,248,238,0.82);
-  --glass-amber-border:     rgba(200,116,42,0.20);
+  --glass-amber-bg:         rgba(252,244,232,0.82);
+  --glass-amber-border:     rgba(122,71,40,0.18);
   --surface-bg:             rgba(255,255,255,0.92);
   --surface-border:         rgba(60,80,50,0.12);
   --card-shadow:            0 4px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.70);
-  --booking-summary-border: rgba(53,168,88,0.22);
+  --booking-summary-border: rgba(60,89,72,0.22);
 
   /* Шапка и таббар */
   --header-bg:     rgba(247,244,239,0.94);
@@ -78,21 +78,21 @@ body.dark {
   --tg-secondary-bg: #132016;
   --tg-text:         #E8F0DF;
   --tg-hint:         #7A9470;
-  --tg-link:         #6AD888;
-  --tg-button:       #4CC870;
-  --tg-button-text:  #0A1A0C;
+  --tg-link:         #6A9E7E;
+  --tg-button:       #5A8E70;
+  --tg-button-text:  #F0F8F2;
 
-  --accent:          #4CC870;
-  --accent-hover:    #3AAA5C;
-  --accent-light:    rgba(76,200,112,0.16);
-  --accent-text:     #0A1A0C;
+  --accent:          #5A8E70;
+  --accent-hover:    #4E7D62;
+  --accent-light:    rgba(90,142,112,0.16);
+  --accent-text:     #F0F8F2;
 
-  --amber:           #E09040;
-  --amber-light:     rgba(224,144,64,0.14);
+  --amber:           #9A6430;
+  --amber-light:     rgba(154,100,48,0.14);
 
   --danger:          #E05858;
   --warning:         #E0A030;
-  --success:         #4CC870;
+  --success:         #5A8E70;
 
   --card-bg:         #162418;
   --divider:         rgba(180,220,155,0.10);
@@ -107,7 +107,7 @@ body.dark {
   --surface-bg:             rgba(18,30,20,0.85);
   --surface-border:         rgba(180,220,155,0.14);
   --card-shadow:            0 4px 24px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
-  --booking-summary-border: rgba(76,200,112,0.25);
+  --booking-summary-border: rgba(90,142,112,0.25);
 
   --header-bg:     rgba(9,18,10,0.90);
   --header-border: rgba(180,220,155,0.10);
@@ -412,7 +412,7 @@ textarea, input { font-family: var(--font); }
 .hero-image {
   position: absolute;
   inset: 0;
-  background-image: url('../Photo/hero.png');
+  background-image: url('../Photo/hero_main.png');
   background-size: cover;
   background-position: center;
 }
@@ -438,26 +438,28 @@ textarea, input { font-family: var(--font); }
 }
 
 .hero-badge {
+  position: absolute;
+  top: 14px;
+  left: 16px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  background: rgba(255,255,255,.15);
+  background: rgba(0,0,0,.28);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.15);
   border-radius: 20px;
   padding: 5px 12px;
-  margin-bottom: 12px;
-  color: rgba(255,255,255,.95);
+  color: rgba(255,255,255,.90);
   text-transform: uppercase;
 }
 
 .hero-title {
   font-family: var(--font);
-  font-size: 44px;
+  font-size: 38px;
   font-weight: 700;
   line-height: 1.0;
   letter-spacing: -0.5px;
@@ -1501,6 +1503,9 @@ body.dark .amenity-item {
 }
 .accordion-header:active { background: var(--divider); }
 
+.acc-title { display: flex; align-items: center; gap: 10px; }
+.acc-icon { display: flex; align-items: center; color: var(--tg-hint); flex-shrink: 0; }
+
 .accordion-arrow {
   color: var(--tg-hint);
   font-size: 20px;
@@ -2160,8 +2165,11 @@ body.dark .amenity-item {
 .tab-btn:active { opacity: 0.65; }
 
 .tab-btn-icon {
-  font-size: 22px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
 }
 
@@ -2239,6 +2247,6 @@ body.dark .amenity-item {
 .more-item:last-child { border-bottom: none; }
 .more-item:active { background: rgba(180,220,155,0.06); }
 
-.more-item-icon { font-size: 22px; width: 28px; text-align: center; flex-shrink: 0; }
+.more-item-icon { display: flex; align-items: center; justify-content: center; width: 28px; flex-shrink: 0; color: var(--tg-hint); }
 .more-item-label { flex: 1; font-size: 16px; font-weight: 500; }
 .more-item-arrow { color: var(--tg-hint); font-size: 20px; }

@@ -127,17 +127,42 @@ const SCREEN_TAB = {
   more: 'more', bikes: 'more', nearby: 'more', instructions: 'more', contact: 'more',
 };
 
+const TAB_ICONS = {
+  home:    `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10.5z"/><path d="M9 22V13h6v9"/></svg>`,
+  booking: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+  sauna:   `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 5-5 7-5 12a5 5 0 0 0 10 0c0-3-1.2-5-2-7-1 2.5-2 3.5-3 3.5 1-2.5 0-5.5 0-8.5z"/></svg>`,
+  more:    `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>`,
+};
+
+const INSTR_ICONS = {
+  directions:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>`,
+  checkin:     `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`,
+  wifi:        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>`,
+  'sauna-use': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 5-5 7-5 12a5 5 0 0 0 10 0c0-3-1.2-5-2-7-1 2.5-2 3.5-3 3.5 1-2.5 0-5.5 0-8.5z"/></svg>`,
+  bbq:         `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="12" y1="9" x2="12" y2="20"/><path d="M6 9C6 5.5 8 3 12 3s6 2.5 6 6"/><line x1="9" y1="20" x2="15" y2="20"/></svg>`,
+  rules:       `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  emergency:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.75a16 16 0 0 0 6 6l1.27-.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+};
+
+const MORE_ICONS = {
+  house:        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10.5z"/><path d="M9 22V13h6v9"/></svg>`,
+  bikes:        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17l3.5-9h5l2.5 4.5"/><path d="M9 8l3 9"/></svg>`,
+  nearby:       `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>`,
+  instructions: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>`,
+  contact:      `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+};
+
 function renderTabBar() {
   const nav = document.createElement('nav');
   nav.id = 'tab-bar';
   nav.innerHTML = [
-    { id: 'home',    icon: '🏠', label: 'Домик'      },
-    { id: 'booking', icon: '📅', label: 'Бронировать' },
-    { id: 'sauna',   icon: '🔥', label: 'Баня'        },
-    { id: 'more',    icon: '⊞',  label: 'Ещё'         },
+    { id: 'home',    label: 'Домик'      },
+    { id: 'booking', label: 'Бронировать' },
+    { id: 'sauna',   label: 'Баня'        },
+    { id: 'more',    label: 'Ещё'         },
   ].map(t => `
     <button class="tab-btn" data-tab="${t.id}">
-      <span class="tab-btn-icon">${t.icon}</span>
+      <span class="tab-btn-icon">${TAB_ICONS[t.id]}</span>
       <span class="tab-btn-label">${t.label}</span>
     </button>`).join('');
   document.getElementById('app').appendChild(nav);
@@ -352,15 +377,14 @@ const screens = {
   onboarding: () => {
     const user = tg?.initDataUnsafe?.user;
     const name = user?.first_name || '';
-    const greeting = name ? `Привет, ${name}! 👋` : 'Привет! 👋';
+    const greeting = name ? `Привет, ${name}!` : 'Привет!';
 
     return `
       <div class="onboarding-screen">
         <div class="onboarding-hero"></div>
         <div class="onboarding-content">
-          <div class="onboarding-emoji">🏕️</div>
           <h1 class="onboarding-title">${greeting}</h1>
-          <p class="onboarding-sub">Это приложение для бронирования A-frame домика в берёзовой роще у Канала&nbsp;им.&nbsp;Москвы.</p>
+          <p class="onboarding-sub">Это приложение для бронирования домика в берёзовой роще у Канала&nbsp;им.&nbsp;Москвы.</p>
           <div class="onboarding-features">
             <p class="of-caption">Здесь можно:</p>
             <div class="onboarding-feature">
@@ -390,19 +414,14 @@ const screens = {
       <div class="hero">
         <div class="hero-image"></div>
         <div class="hero-overlay"></div>
+        <div class="hero-badge">63 км от Москвы · Дмитровский район</div>
         <div class="hero-content">
-          <div class="hero-badge">63 км от Москвы · Дмитровский район</div>
-          <h1 class="hero-title">A-frame<br>домик</h1>
+          <h1 class="hero-title">Репка.<br>Домик в роще.</h1>
           <p class="hero-sub">Лес · Тишина · Баня</p>
         </div>
       </div>
 
       <div class="home-content">
-        <div class="avail-chip">
-          <span class="avail-dot"></span>
-          Свободно: 26–28 июня (выходные)
-        </div>
-
         <p class="home-lead">Место, куда приезжают, чтобы выдохнуть.</p>
 
         <div class="home-info-card" data-action="navigate" data-screen="house">
@@ -430,7 +449,7 @@ const screens = {
         </button>
 
         <div class="home-contact" data-action="share">
-          <span>🔗 Поделиться с другом</span>
+          <span>Поделиться с другом</span>
           <span class="arrow">›</span>
         </div>
       </div>
@@ -449,7 +468,6 @@ const screens = {
 
     const amenities = d.amenities.map(a => `
       <div class="amenity-item">
-        <span class="amenity-icon">${a.icon}</span>
         <span class="amenity-label">${a.label}</span>
       </div>`).join('');
 
@@ -486,12 +504,10 @@ const screens = {
             <h3 class="section-title">Заезд и выезд</h3>
             <div class="checkin-row">
               <div class="checkin-item">
-                <span class="ci-icon">🔑</span>
                 <span class="ci-label">Заезд</span>
                 <span class="ci-value">с ${d.checkIn}</span>
               </div>
               <div class="checkin-item">
-                <span class="ci-icon">🚪</span>
                 <span class="ci-label">Выезд</span>
                 <span class="ci-value">до ${d.checkOut}</span>
               </div>
@@ -537,7 +553,7 @@ const screens = {
         </div>
         ${preSauna ? `
         <div class="price-row">
-          <span>🛁 Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
+          <span>Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
           <span>${fmtPrice(preSaunaPrice)}</span>
         </div>` : ''}
         <div class="price-row total">
@@ -573,13 +589,12 @@ const screens = {
             <textarea class="comment-input" id="booking-comment"
               placeholder="Позвоните за час до заезда / приедем поздно / нужна кроватка…">${comment}</textarea>
             <div class="pets-hint">
-              <span class="pets-hint-icon">🐾</span>
               <span>Едете с питомцем? Напишите об этом — обсуждается индивидуально. Залог с животными 10 000 ₽, на участке не выгуливать.</span>
             </div>
           </div>
 
           <div class="cancellation-note">
-            <span class="cancel-icon">ℹ️</span>
+            <span class="cancel-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg></span>
             <span>Отмена за 3 дня и более — бесплатно. Позже — 50% стоимости.</span>
           </div>
 
@@ -627,7 +642,7 @@ const screens = {
               </div>
               <div class="sbc-price-row">
                 <div class="sbc-price-left">
-                  <div class="sbc-price-name">🛁 Баня — весь период</div>
+                  <div class="sbc-price-name">Баня — весь период</div>
                   <div class="sbc-price-meta">${saunaMetaLabel}</div>
                 </div>
                 <div class="sbc-price-total">${fmtPrice(saunaPrice)}</div>
@@ -701,9 +716,9 @@ const screens = {
 
           ${slot
             ? `<div class="booking-summary">
-                <div class="summary-row"><span>🗓 ${dateLabel(date)}</span></div>
+                <div class="summary-row"><span>${dateLabel(date)}</span></div>
                 <div class="summary-row">
-                  <span>⏱ ${slot} — ${endT}</span>
+                  <span>${slot} — ${endT}</span>
                   <span class="summary-price" id="sauna-price">${fmtPrice(price)}</span>
                 </div>
                </div>`
@@ -737,16 +752,16 @@ const screens = {
       <div class="section-card price-block" id="bikes-order-block">
         ${state.currentOrder?.house ? `
         <div class="price-row">
-          <span>🏠 ${state.currentOrder.house.saunaIncluded ? 'Домик + баня' : 'Домик'}</span>
+          <span>${state.currentOrder.house.saunaIncluded ? 'Домик + баня' : 'Домик'}</span>
           <span>${fmtPrice(state.currentOrder.house.price)}</span>
         </div>` : ''}
         ${state.currentOrder?.sauna ? `
         <div class="price-row">
-          <span>🛁 Баня</span>
+          <span>Баня</span>
           <span>${fmtPrice(state.currentOrder.sauna.price)}</span>
         </div>` : ''}
         <div class="price-row" id="bikes-price-row">
-          <span>🚴 Велосипеды</span>
+          <span>Велосипеды</span>
           <span id="bike-sum-price">${fmtPrice(bikesTotal)}</span>
         </div>
         <div class="price-row total" id="bikes-grand-total">
@@ -814,13 +829,13 @@ const screens = {
             <h3 class="section-title">Популярные маршруты</h3>
             ${APP_DATA.bikes.routes.map(r => `
               <div class="route-item">
-                <span class="route-name">🚴 ${r.name}</span>
+                <span class="route-name">${r.name}</span>
                 <span class="route-meta">${r.distance} · ${r.time}</span>
               </div>`).join('')}
           </div>
 
           <div class="cancellation-note">
-            <span class="cancel-icon">ℹ️</span>
+            <span class="cancel-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg></span>
             <span>Вернуть велосипеды до ${APP_DATA.bikes.returnTime}. Выдаёт хозяин при заезде.</span>
           </div>
 
@@ -847,13 +862,12 @@ const screens = {
 
     const placesList = places.map(p => `
       <div class="place-card">
-        <div class="place-icon">${p.icon}</div>
         <div class="place-info">
           <div class="place-name">${p.name}</div>
           <div class="place-desc">${p.desc}</div>
           <div class="place-meta">
-            <span class="place-dist">📍 ${p.distance}</span>
-            <span class="place-time">🕐 ${p.time}</span>
+            <span class="place-dist">${p.distance}</span>
+            <span class="place-time">${p.time}</span>
           </div>
         </div>
         ${p.mapsUrl ? `<div class="place-action" data-action="openLink" data-url="${p.mapsUrl}">›</div>` : ''}
@@ -866,13 +880,13 @@ const screens = {
         <div class="map-section">
           <div class="map-placeholder">
             <div class="map-content">
-              <div class="map-pin">📍</div>
-              <span>A-frame домик</span>
-              <span class="map-coords">56.3542, 37.5128</span>
+              <div class="map-pin"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></div>
+              <span>Домик в роще</span>
+              <span class="map-coords">56.48085, 37.42054</span>
             </div>
           </div>
           <div class="btn-open-maps" data-action="openLink"
-               data-url="https://yandex.ru/maps/?pt=37.5128,56.3542&z=14">
+               data-url="https://yandex.ru/maps/?pt=37.42054,56.48085&z=14">
             Открыть в Яндекс.Картах
           </div>
         </div>
@@ -897,7 +911,7 @@ const screens = {
           ${APP_DATA.instructions.map(item => `
             <div class="accordion-item" id="acc-${item.id}">
               <div class="accordion-header" data-action="toggleAcc" data-id="${item.id}">
-                <span>${item.title}</span>
+                <span class="acc-title"><span class="acc-icon">${INSTR_ICONS[item.id] || ''}</span>${item.title}</span>
                 <span class="accordion-arrow">›</span>
               </div>
               <div class="accordion-content" id="ac-${item.id}">
@@ -936,12 +950,12 @@ const screens = {
 
           <div class="contact-btns">
             <div class="contact-btn" data-action="openLink" data-url="https://t.me/${c.telegram}">
-              <span class="contact-btn-icon">✉️</span>
+              <span class="contact-btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
               <span class="contact-btn-label">Написать в Telegram</span>
               <span class="contact-btn-arrow">›</span>
             </div>
             <div class="contact-btn" data-action="openLink" data-url="tel:${c.phone}">
-              <span class="contact-btn-icon">📞</span>
+              <span class="contact-btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.75a16 16 0 0 0 6 6l1.27-.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
               <span class="contact-btn-label">Позвонить</span>
               <span class="contact-btn-arrow">›</span>
             </div>
@@ -962,27 +976,27 @@ const screens = {
       <div class="screen-content">
         <div class="section-card">
           <div class="more-item" data-action="navigate" data-screen="house">
-            <span class="more-item-icon">🏠</span>
+            <span class="more-item-icon">${MORE_ICONS.house}</span>
             <span class="more-item-label">О домике</span>
             <span class="more-item-arrow">›</span>
           </div>
           <div class="more-item" data-action="navigate" data-screen="bikes">
-            <span class="more-item-icon">🚴</span>
+            <span class="more-item-icon">${MORE_ICONS.bikes}</span>
             <span class="more-item-label">Велосипеды и SUP</span>
             <span class="more-item-arrow">›</span>
           </div>
           <div class="more-item" data-action="navigate" data-screen="nearby">
-            <span class="more-item-icon">🗺</span>
+            <span class="more-item-icon">${MORE_ICONS.nearby}</span>
             <span class="more-item-label">Что рядом</span>
             <span class="more-item-arrow">›</span>
           </div>
           <div class="more-item" data-action="navigate" data-screen="instructions">
-            <span class="more-item-icon">📋</span>
+            <span class="more-item-icon">${MORE_ICONS.instructions}</span>
             <span class="more-item-label">Инструкции</span>
             <span class="more-item-arrow">›</span>
           </div>
           <div class="more-item" data-action="navigate" data-screen="contact">
-            <span class="more-item-icon">✉️</span>
+            <span class="more-item-icon">${MORE_ICONS.contact}</span>
             <span class="more-item-label">Связаться с хозяином</span>
             <span class="more-item-arrow">›</span>
           </div>
@@ -1013,7 +1027,7 @@ const screens = {
             <div class="udp-note">На всё время вашего пребывания · до ${APP_DATA.sauna.capacity} чел.</div>
           </div>
           <button class="btn-primary" data-action="addSaunaToOrder">
-            🛁 Добавить баню — ${fmtPrice(saunaPrice)}
+            Добавить баню — ${fmtPrice(saunaPrice)}
           </button>
           <button class="btn-outline upsell-skip" data-action="skipToUpsellBikes">
             Нет, спасибо
@@ -1032,12 +1046,12 @@ const screens = {
       <div class="section-card price-block">
         ${house ? `
         <div class="price-row">
-          <span>🏠 ${house.saunaIncluded ? 'Домик + баня' : 'Домик'}</span>
+          <span>${house.saunaIncluded ? 'Домик + баня' : 'Домик'}</span>
           <span>${fmtPrice(house.price)}</span>
         </div>` : ''}
         ${sauna && !house?.saunaIncluded ? `
         <div class="price-row">
-          <span>🛁 Баня</span>
+          <span>Баня</span>
           <span>${fmtPrice(sauna.price)}</span>
         </div>` : ''}
         <div class="price-row total">
@@ -1057,7 +1071,6 @@ const screens = {
           ${inBookingFlow ? '<p class="upsell-step">Шаг 2 из 2</p>' : ''}
           <p class="upsell-invite">Хотите велосипеды?</p>
           <div class="upsell-card" data-action="navigate" data-screen="bikes">
-            <span class="upsell-icon">🚴</span>
             <div class="upsell-body">
               <div class="upsell-name">Велосипеды и SUP</div>
               <div class="upsell-meta">${APP_DATA.bikes.priceDay.toLocaleString('ru-RU')} ₽/вел. · SUP ${APP_DATA.sup.priceDay} ₽/сут. · ${APP_DATA.bikes.available} велика</div>
@@ -1148,7 +1161,6 @@ const screens = {
         <div class="order-card-title">Ваша заявка</div>
         ${items.map(it => `
           <div class="order-item">
-            <span class="order-item-icon">${it.icon}</span>
             <div class="order-item-body">
               <div class="order-item-name">${it.name}</div>
               <div class="order-item-meta">${it.meta}</div>
@@ -1164,10 +1176,9 @@ const screens = {
 
     return `
       <div class="success-screen">
-        <div class="success-icon">${t.icon}</div>
-        <div class="success-checkmark">✓</div>
+        <div class="success-icon"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg></div>
         <h2 class="success-title">${t.title}</h2>
-        <div class="order-status-chip">⏳ Ожидает подтверждения</div>
+        <div class="order-status-chip">Ожидает подтверждения</div>
         ${orderCard}
         <p class="success-note">${t.note}</p>
         <button class="btn-primary success-btn" data-action="goHome">На главную</button>
@@ -1446,7 +1457,7 @@ function refreshBookingPrice() {
         </div>
         ${preSauna ? `
         <div class="price-row">
-          <span>🛁 Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
+          <span>Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
           <span>${fmtPrice(preSaunaPrice)}</span>
         </div>` : ''}
         <div class="price-row total">
@@ -1795,13 +1806,12 @@ const actions = {
     const list   = document.querySelector('.places-list');
     if (list) list.innerHTML = places.map(p => `
       <div class="place-card">
-        <div class="place-icon">${p.icon}</div>
         <div class="place-info">
           <div class="place-name">${p.name}</div>
           <div class="place-desc">${p.desc}</div>
           <div class="place-meta">
-            <span class="place-dist">📍 ${p.distance}</span>
-            <span class="place-time">🕐 ${p.time}</span>
+            <span class="place-dist">${p.distance}</span>
+            <span class="place-time">${p.time}</span>
           </div>
         </div>
         ${p.mapsUrl ? `<div class="place-action" data-action="openLink" data-url="${p.mapsUrl}">›</div>` : ''}
@@ -1863,11 +1873,11 @@ const actions = {
   share() {
     haptic('light');
     const url = 'https://t.me/repka_domik_bot';
-    const text = 'Уютный A-frame домик в лесу, 63 км от Москвы 🏕️';
+    const text = 'Репка. Домик в роще — 63 км от Москвы';
     if (tg) {
       tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
     } else if (navigator.share) {
-      navigator.share({ title: 'A-frame домик', text, url });
+      navigator.share({ title: 'Репка. Домик в роще.', text, url });
     } else {
       navigator.clipboard?.writeText(`${text}\n${url}`);
     }
