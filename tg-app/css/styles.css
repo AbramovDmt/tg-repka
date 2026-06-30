@@ -222,12 +222,12 @@ textarea, input { font-family: var(--font); }
 }
 
 .screen-title {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 600;
   color: var(--tg-text);
   flex: 1;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
 }
 
 .app-back-btn {
@@ -1604,6 +1604,18 @@ body.dark .amenity-item {
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Upsell-экран ─────────────────────────────────────── */
+.upsell-header-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--amber-light);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--amber);
+  flex-shrink: 0;
+}
+
 .upsell-confirm {
   display: flex;
   align-items: center;
@@ -1907,8 +1919,8 @@ body.dark .amenity-item {
 }
 
 .success-title {
-  font-family: var(--font-display);
-  font-size: 26px;
+  font-family: var(--font);
+  font-size: 24px;
   font-weight: 700;
   margin-top: var(--sp-sm);
 }
