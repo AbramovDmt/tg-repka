@@ -36,7 +36,6 @@ const APP_DATA = {
       { label: 'Smart TV' },
       { label: 'Канал рядом' },
       { label: 'Питомцы ОК' },
-      { label: 'SUP-борды' },
     ],
 
     rules: [
