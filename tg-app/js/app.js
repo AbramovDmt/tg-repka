@@ -1347,7 +1347,7 @@ function setupCommentSync() {
 /* ═══ САБМИТЫ ═══════════════════════════════════════════════ */
 
 function notifyOwner(order, comment) {
-  fetch('/.netlify/functions/send-order', {
+  fetch('/api/send-order', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ order, comment, user: tg?.initDataUnsafe?.user || null }),
