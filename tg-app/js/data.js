@@ -110,7 +110,7 @@ const APP_DATA = {
     routes: [
       { name: 'Вдоль канала им. Москвы', distance: '12 км', time: '1 ч' },
       { name: 'До Дмитрова',             distance: '15 км', time: '1.5 ч' },
-      { name: 'Маршрут Яхрома–Дубна',    distance: '30 км', time: '3 ч' },
+      { name: 'Маршрут Яхрома–Дубна',    distance: '56 км', time: '5 ч' },
     ],
   },
 

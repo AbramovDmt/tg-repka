@@ -801,8 +801,8 @@ const screens = {
           <div class="section-card">
             <div class="counter-row">
               <div>
-                <div class="counter-label">Велосипедов</div>
-                <div class="counter-hint">Максимум ${APP_DATA.bikes.available} · ${APP_DATA.bikes.priceDay} ₽/день</div>
+                <div class="counter-label">Велосипеды</div>
+                <div class="counter-hint">Максимум ${APP_DATA.bikes.available} · ${APP_DATA.bikes.priceDay} ₽/день · за штуку</div>
               </div>
               <div class="counter">
                 <button class="counter-btn" data-action="changeBikeCount" data-delta="-1">−</button>
@@ -813,7 +813,7 @@ const screens = {
             <div class="counter-row" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--divider)">
               <div>
                 <div class="counter-label">SUP-борд</div>
-                <div class="counter-hint">Максимум ${APP_DATA.sup.available} · ${APP_DATA.sup.priceDay} ₽/день</div>
+                <div class="counter-hint">Максимум ${APP_DATA.sup.available} · ${APP_DATA.sup.priceDay} ₽/день · за штуку</div>
               </div>
               <div class="counter">
                 <button class="counter-btn" data-action="changeSUPCount" data-delta="-1">−</button>
