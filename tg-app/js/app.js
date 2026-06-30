@@ -595,7 +595,7 @@ const screens = {
 
           <div class="cancellation-note">
             <span class="cancel-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg></span>
-            <span>Отмена за 3 дня и более — бесплатно. Позже — 50% стоимости.</span>
+            <span>Отмена брони за 7 суток — бесплатно. Менее 7 суток — залог не возвращается.</span>
           </div>
 
           <button class="btn-primary" id="booking-submit-btn"
