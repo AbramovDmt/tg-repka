@@ -555,7 +555,9 @@ const screens = {
 
     const preSauna      = state.currentOrder?.sauna?.perDay && price && !price.saunaTotal;
     const preSaunaPrice = preSauna ? state.currentOrder.sauna.price : 0;
-    const displayTotal  = price ? price.total + preSaunaPrice : 0;
+    const preBikes      = state.bikes.count > 0 || state.bikes.sup > 0;
+    const preBikesPrice = preBikes ? calcBikes() : 0;
+    const displayTotal  = price ? price.total + preSaunaPrice + preBikesPrice : 0;
 
     const priceBlock = price ? `
       <div class="section-card price-block">
@@ -567,6 +569,11 @@ const screens = {
         <div class="price-row">
           <span>Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
           <span>${fmtPrice(preSaunaPrice)}</span>
+        </div>` : ''}
+        ${preBikes ? `
+        <div class="price-row">
+          <span>Велосипеды${state.bikes.sup > 0 ? ' + SUP' : ''}</span>
+          <span>${fmtPrice(preBikesPrice)}</span>
         </div>` : ''}
         <div class="price-row total">
           <span>Итого</span>
@@ -1352,6 +1359,7 @@ function submitBooking() {
   if (ta) state.booking.comment = ta.value;
   const price    = calcBooking();
   const preSauna = state.currentOrder?.sauna?.perDay && !price?.saunaTotal ? state.currentOrder.sauna : null;
+  const hasBikes = state.bikes.count > 0 || state.bikes.sup > 0;
   state.currentOrder = {
     house: price ? {
       checkIn:       state.booking.checkIn,
@@ -1362,12 +1370,19 @@ function submitBooking() {
       saunaIncluded: price.saunaTotal > 0,
     } : null,
     sauna: preSauna,
-    bikes: null,
+    bikes: hasBikes ? { count: state.bikes.count, sup: state.bikes.sup, price: calcBikes() } : null,
   };
-  state.bookingFlow = true;
   hapticNotify('success');
   router.stack = [{ id: 'home', params: {} }];
-  router.navigate(preSauna ? 'upsellBikes' : 'upsellSauna');
+  if (preSauna && hasBikes) {
+    notifyOwner(state.currentOrder, state.booking.comment);
+    state.bookingFlow = false;
+    resetFormState();
+    router.navigate('success', { type: 'booking' });
+  } else {
+    state.bookingFlow = true;
+    router.navigate(preSauna ? 'upsellBikes' : 'upsellSauna');
+  }
 }
 
 function submitSauna() {
@@ -1954,6 +1969,21 @@ function resolveParam(param) {
       // Scroll calendar to check-in month
       const d = new Date(data.checkIn);
       if (!isNaN(d)) { state.cal.year = d.getFullYear(); state.cal.month = d.getMonth(); }
+
+      // Prefill sauna/bikes/SUP from landing page calculator
+      if (data.sauna && data.checkOut) {
+        const nights = Math.round((new Date(data.checkOut) - new Date(data.checkIn)) / 86400000);
+        if (nights > 0) {
+          state.currentOrder.sauna = {
+            perDay: true, nights,
+            price:  calcSaunaPerDay(nights),
+            date: null, slot: null, duration: null,
+          };
+        }
+      }
+      if (Number(data.bikesCount) > 0) state.bikes.count = Number(data.bikesCount);
+      if (Number(data.supsCount)  > 0) state.bikes.sup   = Number(data.supsCount);
+
       return 'booking';
     }
   } catch (_) { /* plain route string */ }
