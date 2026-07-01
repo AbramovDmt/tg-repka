@@ -1982,8 +1982,8 @@ function resolveParam(param) {
           };
         }
       }
-      if (Number(data.bikesCount) > 0) state.bikes.count   = Number(data.bikesCount);
-      if (Number(data.supsCount)  > 0) state.bikes.sup     = Number(data.supsCount);
+      state.bikes.count = Number(data.bikesCount) || 0;
+      state.bikes.sup   = Number(data.supsCount)  || 0;
       if (Number(data.bikesDays)  > 0) state.bikes.days    = Number(data.bikesDays);
       if (Number(data.supsDays)   > 0) state.bikes.supDays = Number(data.supsDays);
 
