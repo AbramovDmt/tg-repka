@@ -554,11 +554,13 @@ const screens = {
         </div>
       </div>` : '';
 
-    const preSauna      = state.currentOrder?.sauna?.perDay && price && !price.saunaTotal;
-    const preSaunaPrice = preSauna ? state.currentOrder.sauna.price : 0;
-    const preBikes      = state.bikes.count > 0 || state.bikes.sup > 0;
-    const preBikesPrice = preBikes ? calcBikes() : 0;
-    const displayTotal  = price ? price.total + preSaunaPrice + preBikesPrice : 0;
+    const preSauna       = state.currentOrder?.sauna?.perDay && price && !price.saunaTotal;
+    const preSaunaPrice  = preSauna ? state.currentOrder.sauna.price : 0;
+    const preBikesCount  = state.bikes.count > 0;
+    const preSupCount    = state.bikes.sup > 0;
+    const preBikesPrice  = preBikesCount ? APP_DATA.bikes.priceDay * state.bikes.count * state.bikes.days : 0;
+    const preSupPrice    = preSupCount   ? APP_DATA.sup.priceDay   * state.bikes.sup   * state.bikes.supDays : 0;
+    const displayTotal   = price ? price.total + preSaunaPrice + preBikesPrice + preSupPrice : 0;
 
     const priceBlock = price ? `
       <div class="section-card price-block">
@@ -571,10 +573,15 @@ const screens = {
           <span>Баня <span class="remove-item" data-action="removeSaunaPreBooking">✕ убрать</span></span>
           <span>${fmtPrice(preSaunaPrice)}</span>
         </div>` : ''}
-        ${preBikes ? `
+        ${preBikesCount ? `
         <div class="price-row">
-          <span>Велосипеды${state.bikes.sup > 0 ? ' + SUP' : ''}</span>
+          <span>Велосипеды ${state.bikes.count} шт. × ${state.bikes.days} дн.</span>
           <span>${fmtPrice(preBikesPrice)}</span>
+        </div>` : ''}
+        ${preSupCount ? `
+        <div class="price-row">
+          <span>SUP ${state.bikes.sup} шт. × ${state.bikes.supDays} дн.</span>
+          <span>${fmtPrice(preSupPrice)}</span>
         </div>` : ''}
         <div class="price-row total">
           <span>Итого</span>
