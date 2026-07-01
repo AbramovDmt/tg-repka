@@ -42,12 +42,15 @@ tg-app/
 
 ### Цены
 ```javascript
-APP_DATA.house.priceWeekday = 5000  // будни (₽/ночь)
-APP_DATA.house.priceWeekend = 7000  // выходные (₽/ночь)
-APP_DATA.house.cleaning = 1500      // уборка
-APP_DATA.sauna.pricePerHour = 1500  // баня ₽/час
-APP_DATA.bikes.pricePerHour = 150   // велосипеды ₽/час
-APP_DATA.bikes.priceDay = 600       // велосипеды ₽/день
+APP_DATA.house.priceWeekday = 8000       // будни пн–чт, вс (₽/ночь)
+APP_DATA.house.priceWeekend = 10000      // выходные пт–сб (₽/ночь)
+APP_DATA.house.cleaning = 1500           // уборка
+APP_DATA.sauna.pricePerHour = 1500       // баня ₽/час (мин. 3 часа)
+APP_DATA.sauna.pricePerDay = 8000        // баня ₽/сутки 1-я ночь (посуточная)
+APP_DATA.sauna.pricePerDayExtra = 4000   // баня ₽/сутки 2-я и последующие ночи
+APP_DATA.sauna.broomPrice = 500          // веник (если нет своего)
+APP_DATA.bikes.priceDay = 1500           // велосипеды ₽/день за велосипед
+APP_DATA.sup.priceDay = 800              // SUP-борд ₽/день за штуку
 ```
 
 ### Занятые даты (для календаря)
@@ -74,7 +77,7 @@ APP_DATA.contact.phone = '+79261234567'     // ← замените на реа�
 ### Координаты для карты (экран "Что рядом")
 В `app.js` в экране `nearby` найдите:
 ```
-data-url="https://yandex.ru/maps/?pt=37.5128,56.3542&z=14"
+data-url="https://yandex.ru/maps/?pt=37.42054,56.48085&z=14"
 ```
 Замените координаты на реальные (lon, lat — именно в таком порядке для Яндекса).
 
@@ -136,7 +139,7 @@ const gallery = data.gallery.map((item, i) => `
 Откройте `index.html` напрямую в браузере — приложение работает без Telegram SDK.
 Тема определяется по системным настройкам (prefers-color-scheme).
 
-Для хостинга: загрузите папку `tg-app/` на любой статический хостинг (Vercel, Netlify, GitHub Pages).
+Для хостинга: папка `tg-app/` задеплоена на Vercel (проект `tg-app`, авто-деплой с ветки `main`).
 
 ---
 

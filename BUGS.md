@@ -140,7 +140,7 @@ function closeOfferModal() {
 | C-1 | Telegram username хозяина | `data.js:204` | `aframe_dom` — placeholder |
 | C-2 | Телефон хозяина | `data.js:205` | `+79261234567` — placeholder |
 | C-3 | URL шаринга (бот) | `app.js:1351` | `repka_domik_bot` — placeholder |
-| C-4 | Координаты карты | `app.js:736` | `37.5128,56.3542` — уточнить у Сергея |
+| C-4 | Координаты карты | `app.js:736` | ✅ `37.42054,56.48085` — обновлено |
 | C-5 | Wi-Fi пароль | `data.js`, `app.js:1317` | `nature2024` — уточнить у Сергея |
 | C-6 | Webhook для реальных броней | `app.js:957–976` | только `navigate('success')`, не шлёт данные |
 | C-7 | Реальные фото (галерея) | `data.js:56–61` | CSS-градиенты-заглушки |
