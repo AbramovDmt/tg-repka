@@ -8,7 +8,7 @@
 const state = {
   booking:      { checkIn: null, checkOut: null, guests: 2, comment: '' },
   sauna:        { date: null, slot: null, duration: 3, comment: '', standaloneOverride: false, broom: false },
-  bikes:        { count: 1, sup: 0, duration: '2h', comment: '' },
+  bikes:        { count: 1, sup: 0, days: 1, supDays: 1, duration: '2h', comment: '' },
   cal:          { year: new Date().getFullYear(), month: new Date().getMonth() },
   nearby:       { tab: 'Природа' },
   success:      { type: 'booking' },
@@ -244,7 +244,8 @@ function calcSaunaPerDay(nights) {
 }
 
 function calcBikes() {
-  return APP_DATA.bikes.priceDay * state.bikes.count + APP_DATA.sup.priceDay * state.bikes.sup;
+  return APP_DATA.bikes.priceDay * state.bikes.count * state.bikes.days
+       + APP_DATA.sup.priceDay   * state.bikes.sup   * state.bikes.supDays;
 }
 
 /* ═══ КОМПОНЕНТЫ ════════════════════════════════════════════ */
@@ -791,12 +792,12 @@ const screens = {
       <div class="booking-summary">
         ${count > 0 ? `
         <div class="summary-row">
-          <span id="bike-sum-label">${count} велосипед${count>1?'а':''} · весь день</span>
-          <span class="summary-price" id="bike-sum-price">${fmtPrice(APP_DATA.bikes.priceDay * count)}</span>
+          <span id="bike-sum-label">${count} велосипед${count>1?'а':''} · ${state.bikes.days > 1 ? state.bikes.days + ' дн.' : 'весь день'}</span>
+          <span class="summary-price" id="bike-sum-price">${fmtPrice(APP_DATA.bikes.priceDay * count * state.bikes.days)}</span>
         </div>` : '<span id="bike-sum-label" style="display:none"></span><span id="bike-sum-price" style="display:none"></span>'}
         <div class="summary-row" id="sup-sum-row"${state.bikes.sup > 0 ? '' : ' style="display:none"'}>
-          <span id="sup-sum-label">${state.bikes.sup} SUP · весь день</span>
-          <span class="summary-price" id="sup-sum-price">${fmtPrice(APP_DATA.sup.priceDay * state.bikes.sup)}</span>
+          <span id="sup-sum-label">${state.bikes.sup} SUP · ${state.bikes.supDays > 1 ? state.bikes.supDays + ' дн.' : 'весь день'}</span>
+          <span class="summary-price" id="sup-sum-price">${fmtPrice(APP_DATA.sup.priceDay * state.bikes.sup * state.bikes.supDays)}</span>
         </div>
       </div>`;
 
@@ -1428,7 +1429,7 @@ function submitBikes() {
 function resetFormState() {
   state.booking     = { checkIn: null, checkOut: null, guests: 2, comment: '' };
   state.sauna       = { date: null, slot: null, duration: 3, comment: '', standaloneOverride: false, broom: false };
-  state.bikes       = { count: 1, sup: 0, duration: '2h', comment: '' };
+  state.bikes       = { count: 1, sup: 0, days: 1, supDays: 1, duration: '2h', comment: '' };
   state.cal         = { year: new Date().getFullYear(), month: new Date().getMonth() };
   state.orderComment = '';
 }
@@ -1561,17 +1562,17 @@ function refreshBikesSummary() {
   const lbl = document.getElementById('bike-sum-label');
   const pr  = document.getElementById('bike-sum-price');
   if (lbl) {
-    lbl.textContent = `${count} велосипед${count>1?'а':''} · весь день`;
+    lbl.textContent = `${count} велосипед${count>1?'а':''} · ${state.bikes.days > 1 ? state.bikes.days + ' дн.' : 'весь день'}`;
     lbl.closest('.summary-row').style.display = count > 0 ? '' : 'none';
   }
-  if (pr)  pr.textContent  = fmtPrice(APP_DATA.bikes.priceDay * count);
+  if (pr)  pr.textContent  = fmtPrice(APP_DATA.bikes.priceDay * count * state.bikes.days);
 
   const supRow = document.getElementById('sup-sum-row');
   const supLbl = document.getElementById('sup-sum-label');
   const supPr  = document.getElementById('sup-sum-price');
   if (supRow) supRow.style.display = sup > 0 ? '' : 'none';
-  if (supLbl) supLbl.textContent = `${sup} SUP · весь день`;
-  if (supPr)  supPr.textContent  = fmtPrice(APP_DATA.sup.priceDay * sup);
+  if (supLbl) supLbl.textContent = `${sup} SUP · ${state.bikes.supDays > 1 ? state.bikes.supDays + ' дн.' : 'весь день'}`;
+  if (supPr)  supPr.textContent  = fmtPrice(APP_DATA.sup.priceDay * sup * state.bikes.supDays);
 
   const supCountEl = document.querySelector('.counter-value-sup');
   if (supCountEl) supCountEl.textContent = sup;
@@ -1981,8 +1982,10 @@ function resolveParam(param) {
           };
         }
       }
-      if (Number(data.bikesCount) > 0) state.bikes.count = Number(data.bikesCount);
-      if (Number(data.supsCount)  > 0) state.bikes.sup   = Number(data.supsCount);
+      if (Number(data.bikesCount) > 0) state.bikes.count   = Number(data.bikesCount);
+      if (Number(data.supsCount)  > 0) state.bikes.sup     = Number(data.supsCount);
+      if (Number(data.bikesDays)  > 0) state.bikes.days    = Number(data.bikesDays);
+      if (Number(data.supsDays)   > 0) state.bikes.supDays = Number(data.supsDays);
 
       return 'booking';
     }
