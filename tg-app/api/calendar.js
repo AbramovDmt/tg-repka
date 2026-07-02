@@ -1,25 +1,32 @@
-module.exports = async function handler(req, res) {
-  const AVITO_ICS = 'https://www.avito.ru/calendars-export/79/37/7926314037.ics';
+const SOURCES = [
+  'https://www.avito.ru/calendars-export/79/37/7926314037.ics',
+  'https://sutochno.ru/calendar/ical/e228595faf3e8ce95d27dd1c7b57ee0edda0bd7.ics',
+];
 
+module.exports = async function handler(req, res) {
   try {
-    const r = await fetch(AVITO_ICS, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; repka-bot/1.0)' },
-    });
-    if (!r.ok) throw new Error(`Avito ${r.status}`);
-    const text = await r.text();
+    const results = await Promise.allSettled(
+      SOURCES.map((url) =>
+        fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; repka-bot/1.0)' } })
+          .then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.text(); })
+      )
+    );
 
     const dates = [];
-    const re = /BEGIN:VEVENT[\s\S]*?END:VEVENT/g;
-    let m;
-    while ((m = re.exec(text)) !== null) {
-      const startM = m[0].match(/DTSTART[^:\r\n]*:(\d{8})/);
-      const endM   = m[0].match(/DTEND[^:\r\n]*:(\d{8})/);
-      if (!startM || !endM) continue;
-      let d = icsDate(startM[1]);
-      const end = icsDate(endM[1]);
-      while (d < end) {
-        dates.push(toYMD(d));
-        d.setDate(d.getDate() + 1);
+    for (const result of results) {
+      if (result.status !== 'fulfilled') continue;
+      const re = /BEGIN:VEVENT[\s\S]*?END:VEVENT/g;
+      let m;
+      while ((m = re.exec(result.value)) !== null) {
+        const startM = m[0].match(/DTSTART[^:\r\n]*:(\d{8})/);
+        const endM   = m[0].match(/DTEND[^:\r\n]*:(\d{8})/);
+        if (!startM || !endM) continue;
+        let d = icsDate(startM[1]);
+        const end = icsDate(endM[1]);
+        while (d < end) {
+          dates.push(toYMD(d));
+          d.setDate(d.getDate() + 1);
+        }
       }
     }
 
