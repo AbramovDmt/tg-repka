@@ -819,9 +819,6 @@ const screens = {
 
         <div class="bikes-hero">
           <div class="bikes-hero-image"></div>
-          <div class="bikes-hero-info">
-            ${APP_DATA.bikes.available} велика · ${APP_DATA.bikes.priceDay} ₽/день · SUP ${APP_DATA.sup.priceDay} ₽/день
-          </div>
         </div>
 
         <div class="screen-content">
@@ -859,11 +856,6 @@ const screens = {
                 <span class="route-name">${r.name}</span>
                 <span class="route-meta">${r.distance} · ${r.time}</span>
               </div>`).join('')}
-          </div>
-
-          <div class="cancellation-note">
-            <span class="cancel-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg></span>
-            <span>Вернуть велосипеды до ${APP_DATA.bikes.returnTime}. Выдаёт хозяин при заезде.</span>
           </div>
 
           <div class="section-card">
