@@ -58,7 +58,7 @@ function buildText({ order, comment, user }) {
       ? `@${user.username}`
       : `<a href="tg://user?id=${user.id}">${name || 'без имени'}</a>`;
     lines.push('');
-    lines.push(`👤 ${name || '—'} · ${contact}`);
+    lines.push(`👤 ${name || '–'} · ${contact}`);
   }
 
   return lines.join('\n');

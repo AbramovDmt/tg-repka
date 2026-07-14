@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   app.js — логика приложения
+   app.js – логика приложения
    Роутер, экраны, компоненты, обработчики событий.
    ═══════════════════════════════════════════════════════════ */
 
@@ -39,7 +39,7 @@ function applyTheme(scheme) {
   if (meta) meta.content = scheme === 'dark' ? '#0D1B0F' : '#F7F4EF';
 }
 
-/* MainButton — единственная нижняя кнопка Telegram */
+/* MainButton – единственная нижняя кнопка Telegram */
 function setMainButton(text, cb, active = true) {
   if (!tg) return;
   const mb = tg.MainButton;
@@ -100,7 +100,7 @@ const router = {
 
     let html = fn(params);
 
-    // Вставляем кнопку назад прямо в HTML — перед заголовком шапки
+    // Вставляем кнопку назад прямо в HTML – перед заголовком шапки
     if (this.stack.length > 1) {
       html = html.replace('<div class="screen-header">', `<div class="screen-header">${BACK_BTN}`);
     }
@@ -197,7 +197,7 @@ function fmtDate(y, m, d) { return `${y}-${pad(m)}-${pad(d)}`; }
 function fmtPrice(n) { return n.toLocaleString('ru-RU') + ' ₽'; }
 
 function dateLabel(ds) {
-  if (!ds) return '—';
+  if (!ds) return '–';
   const [y, m, d] = ds.split('-').map(Number);
   const months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
   const days   = ['вс','пн','вт','ср','чт','пт','сб'];
@@ -508,7 +508,7 @@ const screens = {
           <div class="section-card bring-own-card">
             <h3 class="section-title">Возьмите с собой</h3>
             <ul class="rules-list" style="padding-bottom:12px">
-              <li>Еда и напитки — магазин в 3 км (5 мин на авто)</li>
+              <li>Еда и напитки – магазин в 3 км (5 мин на авто)</li>
               <li>Личные средства гигиены (зубная щётка, бритва и т.д.)</li>
             </ul>
           </div>
@@ -550,7 +550,7 @@ const screens = {
         <div class="sel-date-divider">→</div>
         <div class="sel-date-item">
           <span class="sel-label">Выезд</span>
-          <span class="sel-value">${checkOut ? dateLabel(checkOut) : '—'}</span>
+          <span class="sel-value">${checkOut ? dateLabel(checkOut) : '–'}</span>
         </div>
       </div>` : '';
 
@@ -616,13 +616,13 @@ const screens = {
             <textarea class="comment-input" id="booking-comment"
               placeholder="Поздний заезд, нужна кроватка, вопрос…">${comment}</textarea>
             <div class="pets-hint">
-              <span>Едете с питомцем? Напишите об этом — обсуждается индивидуально. Залог с животными 10 000 ₽, на участке не выгуливать.</span>
+              <span>Едете с питомцем? Напишите об этом – обсуждается индивидуально. Залог с животными 10 000 ₽, на участке не выгуливать.</span>
             </div>
           </div>
 
           <div class="cancellation-note">
             <span class="cancel-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg></span>
-            <span>Отмена брони за 7 суток — бесплатно. Менее 7 суток — залог не возвращается.</span>
+            <span>Отмена брони за 7 суток – бесплатно. Менее 7 суток – залог не возвращается.</span>
           </div>
 
           <button class="btn-primary" id="booking-submit-btn"
@@ -665,11 +665,11 @@ const screens = {
             <div class="section-card">
               <div class="sauna-booking-context">
                 <div class="sbc-label">К вашей брони домика</div>
-                <div class="sbc-dates">${dateLabel(checkIn)} — ${dateLabel(checkOut)} · ${nights} ${nightLabel(nights)}</div>
+                <div class="sbc-dates">${dateLabel(checkIn)} – ${dateLabel(checkOut)} · ${nights} ${nightLabel(nights)}</div>
               </div>
               <div class="sbc-price-row">
                 <div class="sbc-price-left">
-                  <div class="sbc-price-name">Баня — весь период</div>
+                  <div class="sbc-price-name">Баня – весь период</div>
                   <div class="sbc-price-meta">${saunaMetaLabel}</div>
                 </div>
                 <div class="sbc-price-total">${fmtPrice(saunaPrice)}</div>
@@ -690,7 +690,7 @@ const screens = {
                  </button>`}
 
             <button class="btn-outline" data-action="switchToStandaloneMode">
-              Только баня без домика — по часам
+              Только баня без домика – по часам
             </button>
           </div>
           <div class="screen-bottom-space"></div>
@@ -718,7 +718,7 @@ const screens = {
           </div>
 
           <div class="section-card">
-            <h3 class="section-title" id="slots-title">Доступные слоты${date ? ' — ' + dateLabel(date) : ''}</h3>
+            <h3 class="section-title" id="slots-title">Доступные слоты${date ? ' – ' + dateLabel(date) : ''}</h3>
             ${renderSlotGrid(date)}
           </div>
 
@@ -745,7 +745,7 @@ const screens = {
             ? `<div class="booking-summary">
                 <div class="summary-row"><span>${dateLabel(date)}</span></div>
                 <div class="summary-row">
-                  <span>${slot} — ${endT}</span>
+                  <span>${slot} – ${endT}</span>
                   <span class="summary-price" id="sauna-price">${fmtPrice(price)}</span>
                 </div>
                </div>`
@@ -1051,7 +1051,7 @@ const screens = {
             <div class="udp-note">На всё время вашего пребывания · до ${APP_DATA.sauna.capacity} чел.</div>
           </div>
           <button class="btn-primary" data-action="addSaunaToOrder">
-            Добавить баню — ${fmtPrice(saunaPrice)}
+            Добавить баню – ${fmtPrice(saunaPrice)}
           </button>
           <button class="btn-outline upsell-skip" data-action="skipToUpsellBikes">
             Нет, спасибо
@@ -1105,7 +1105,7 @@ const screens = {
           <div class="section-card">
             <label class="comment-label">Есть вопрос или пожелание? <span class="optional">(необязательно)</span></label>
             <textarea class="comment-input" id="order-comment"
-              placeholder="Напишите хозяину — любой вопрос или уточнение по брони">${state.orderComment}</textarea>
+              placeholder="Напишите хозяину – любой вопрос или уточнение по брони">${state.orderComment}</textarea>
           </div>
           <button class="btn-primary upsell-submit" data-action="finalSubmit">
             ${submitLabel}
@@ -1458,7 +1458,7 @@ function refreshSelectedDates() {
       <div class="sel-date-divider">→</div>
       <div class="sel-date-item">
         <span class="sel-label">Выезд</span>
-        <span class="sel-value">${checkOut ? dateLabel(checkOut) : '—'}</span>
+        <span class="sel-value">${checkOut ? dateLabel(checkOut) : '–'}</span>
       </div>
     </div>`;
 
@@ -1518,7 +1518,7 @@ function refreshSaunaSlots() {
     const existing = sCards[1].querySelector('.slot-grid, .no-date-hint');
     if (existing) existing.outerHTML = renderSlotGrid(state.sauna.date);
     const title = sCards[1].querySelector('.section-title');
-    if (title) title.textContent = `Доступные слоты${state.sauna.date ? ' — ' + dateLabel(state.sauna.date) : ''}`;
+    if (title) title.textContent = `Доступные слоты${state.sauna.date ? ' – ' + dateLabel(state.sauna.date) : ''}`;
   }
 }
 
@@ -1534,7 +1534,7 @@ function refreshSaunaSummary() {
       <div class="booking-summary">
         <div class="summary-row"><span>🗓 ${dateLabel(date)}</span></div>
         <div class="summary-row">
-          <span>⏱ ${slot} — ${endT}</span>
+          <span>⏱ ${slot} – ${endT}</span>
           <span class="summary-price">${fmtPrice(calcSauna())}</span>
         </div>
       </div>`;
@@ -1911,7 +1911,7 @@ const actions = {
   share() {
     haptic('light');
     const url = 'https://t.me/repka_domik_bot';
-    const text = 'Репка. Домик в роще — 63 км от Москвы';
+    const text = 'Репка. Домик в роще – 63 км от Москвы';
     if (tg) {
       tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
     } else if (navigator.share) {
