@@ -513,21 +513,23 @@ const screens = {
             </ul>
           </div>
 
-          <div class="section-card" style="margin-top:14px">
-            <h3 class="section-title">Заезд и выезд</h3>
+          <hr class="section-group-divider">
+
+          <div class="section-card" style="margin-top:10px">
+            <h3 class="section-title" style="color:var(--terracotta)">Заезд и выезд</h3>
             <div class="checkin-row">
               <div class="checkin-item">
-                <span class="ci-label">Заезд</span>
+                <span class="ci-label" style="color:var(--terracotta)">Заезд</span>
                 <span class="ci-value">с ${d.checkIn}</span>
               </div>
               <div class="checkin-item">
-                <span class="ci-label">Выезд</span>
+                <span class="ci-label" style="color:var(--terracotta)">Выезд</span>
                 <span class="ci-value">до ${d.checkOut}</span>
               </div>
             </div>
           </div>
 
-          <div class="section-card">
+          <div class="section-card section-card--rules">
             <h3 class="section-title" style="color:var(--terracotta)">Правила</h3>
             <ul class="rules-list" style="padding-bottom:12px">${rules}</ul>
           </div>
