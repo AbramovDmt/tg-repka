@@ -24,6 +24,9 @@
   --amber:           #7A4728;
   --amber-light:     rgba(122,71,40,0.12);
 
+  /* Терракота — мягкий акцент для заголовков */
+  --terracotta:      #C2694A;
+
   /* Семантика */
   --danger:          #D04040;
   --warning:         #C08020;
@@ -41,8 +44,6 @@
   --glass-border:           rgba(60,80,50,0.11);
   --glass-amber-bg:         rgba(252,244,232,0.82);
   --glass-amber-border:     rgba(122,71,40,0.18);
-  --glass-terracotta-bg:     rgba(248,231,222,0.82);
-  --glass-terracotta-border: rgba(198,106,74,0.22);
   --surface-bg:             rgba(255,255,255,0.92);
   --surface-border:         rgba(60,80,50,0.12);
   --card-shadow:            0 4px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.70);
@@ -92,6 +93,8 @@ body.dark {
   --amber:           #9A6430;
   --amber-light:     rgba(154,100,48,0.14);
 
+  --terracotta:      #E0916E;
+
   --danger:          #E05858;
   --warning:         #E0A030;
   --success:         #5A8E70;
@@ -106,8 +109,6 @@ body.dark {
   --glass-border:           rgba(180,220,155,0.10);
   --glass-amber-bg:         rgba(40,28,10,0.70);
   --glass-amber-border:     rgba(224,144,64,0.22);
-  --glass-terracotta-bg:     rgba(46,27,20,0.72);
-  --glass-terracotta-border: rgba(214,140,108,0.26);
   --surface-bg:             rgba(18,30,20,0.85);
   --surface-border:         rgba(180,220,155,0.14);
   --card-shadow:            0 4px 24px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
@@ -316,12 +317,6 @@ textarea, input { font-family: var(--font); }
 .sauna-screen .section-card {
   background: var(--glass-amber-bg);
   border-color: var(--glass-amber-border);
-}
-
-/* Правила — мягкая терракота (внимание/ограничения) */
-.section-card--rules {
-  background: var(--glass-terracotta-bg);
-  border-color: var(--glass-terracotta-border);
 }
 
 .section-title {

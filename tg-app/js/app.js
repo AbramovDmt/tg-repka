@@ -513,7 +513,7 @@ const screens = {
             </ul>
           </div>
 
-          <div class="section-card">
+          <div class="section-card" style="margin-top:14px">
             <h3 class="section-title">Заезд и выезд</h3>
             <div class="checkin-row">
               <div class="checkin-item">
@@ -527,8 +527,8 @@ const screens = {
             </div>
           </div>
 
-          <div class="section-card section-card--rules">
-            <h3 class="section-title">Правила</h3>
+          <div class="section-card">
+            <h3 class="section-title" style="color:var(--terracotta)">Правила</h3>
             <ul class="rules-list" style="padding-bottom:12px">${rules}</ul>
           </div>
         </div>
