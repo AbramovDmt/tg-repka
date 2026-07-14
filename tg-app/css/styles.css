@@ -41,8 +41,8 @@
   --glass-border:           rgba(60,80,50,0.11);
   --glass-amber-bg:         rgba(252,244,232,0.82);
   --glass-amber-border:     rgba(122,71,40,0.18);
-  --glass-green-bg:         rgba(237,244,232,0.82);
-  --glass-green-border:     rgba(60,89,72,0.18);
+  --glass-terracotta-bg:     rgba(248,231,222,0.82);
+  --glass-terracotta-border: rgba(198,106,74,0.22);
   --surface-bg:             rgba(255,255,255,0.92);
   --surface-border:         rgba(60,80,50,0.12);
   --card-shadow:            0 4px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.70);
@@ -106,8 +106,8 @@ body.dark {
   --glass-border:           rgba(180,220,155,0.10);
   --glass-amber-bg:         rgba(40,28,10,0.70);
   --glass-amber-border:     rgba(224,144,64,0.22);
-  --glass-green-bg:         rgba(24,42,26,0.72);
-  --glass-green-border:     rgba(90,142,112,0.22);
+  --glass-terracotta-bg:     rgba(46,27,20,0.72);
+  --glass-terracotta-border: rgba(214,140,108,0.26);
   --surface-bg:             rgba(18,30,20,0.85);
   --surface-border:         rgba(180,220,155,0.14);
   --card-shadow:            0 4px 24px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
@@ -318,16 +318,10 @@ textarea, input { font-family: var(--font); }
   border-color: var(--glass-amber-border);
 }
 
-/* Что включено — зелёный тон (позитив) */
-.section-card--included {
-  background: var(--glass-green-bg);
-  border-color: var(--glass-green-border);
-}
-
-/* Правила — тёплый янтарный тон (внимание/ограничения) */
+/* Правила — мягкая терракота (внимание/ограничения) */
 .section-card--rules {
-  background: var(--glass-amber-bg);
-  border-color: var(--glass-amber-border);
+  background: var(--glass-terracotta-bg);
+  border-color: var(--glass-terracotta-border);
 }
 
 .section-title {

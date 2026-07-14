@@ -500,7 +500,7 @@ const screens = {
 
           <p class="house-desc">${d.description}</p>
 
-          <div class="section-card section-card--included">
+          <div class="section-card">
             <h3 class="section-title">Что включено</h3>
             <div class="amenities-grid">${amenities}</div>
           </div>
