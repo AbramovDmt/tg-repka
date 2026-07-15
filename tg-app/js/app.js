@@ -144,6 +144,46 @@ const INSTR_ICONS = {
   emergency:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.75a16 16 0 0 0 6 6l1.27-.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
 };
 
+const AMENITY_ICONS = {
+  bed:        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18v-6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v6"/><path d="M2 18h20M2 14v4M22 14v4"/><path d="M6 10V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/></svg>`,
+  towels:     `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/></svg>`,
+  underfloor: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M7 16c0-2 2-2 2-4s-2-2-2-4"/><path d="M12 16c0-2 2-2 2-4s-2-2-2-4"/><path d="M17 16c0-2 2-2 2-4s-2-2-2-4"/></svg>`,
+  soap:       `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="10" height="13" rx="2"/><path d="M10 8V5a2 2 0 0 1 2-2 2 2 0 0 1 2 2v3"/></svg>`,
+  utensils:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7a2 2 0 0 0 2 2 2 2 0 0 0 2-2V2M9 11v11"/><path d="M17 2c-1.5 1.2-2 3-2 5.5S15.5 12 17 13v9"/></svg>`,
+  fridge:     `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="6" y1="10" x2="18" y2="10"/><line x1="9" y1="5" x2="9" y2="7"/><line x1="9" y1="13" x2="9" y2="15"/></svg>`,
+  stove:      `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><circle cx="15" cy="10" r="1.6"/><circle cx="9" cy="15" r="1.6"/><circle cx="15" cy="15" r="1.6"/></svg>`,
+  microwave:  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="1.5"/><rect x="6" y="9" width="8" height="6" rx="0.5"/><circle cx="17.5" cy="12" r="1.2"/></svg>`,
+  hotwater:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>`,
+  tv:         `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
+  wifi:       `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>`,
+  speaker:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="8" r="2"/><circle cx="12" cy="15" r="3"/></svg>`,
+  bbq:        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="12" y1="9" x2="12" y2="20"/><path d="M6 9C6 5.5 8 3 12 3s6 2.5 6 6"/><line x1="9" y1="20" x2="15" y2="20"/></svg>`,
+  firewood:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="5"/><circle cx="16" cy="14" r="5"/><line x1="8" y1="9" x2="8" y2="19"/><line x1="16" y1="9" x2="16" y2="19"/></svg>`,
+  terrace:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 9h18"/><path d="M5 21V9M12 21V9M19 21V9"/></svg>`,
+  chair:      `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V9a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12"/><path d="M5 14h14"/><path d="M5 21h2M17 21h2"/></svg>`,
+  car:        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/><rect x="3" y="11" width="18" height="7" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>`,
+  waves:      `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 16c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/></svg>`,
+  hairdryer:  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a5 5 0 0 1 5-5h2a5 5 0 0 1 0 10h-1l6 3.5"/><circle cx="19" cy="18" r="1.2"/></svg>`,
+  iron:       `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l3-9.5A3 3 0 0 1 9.8 6h5.2A5 5 0 0 1 20 11v3a4 4 0 0 1-4 4H6a2 2 0 0 1-2-2z"/><line x1="4" y1="18" x2="20" y2="18"/></svg>`,
+  shower:     `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3M12 2v3M16 2v3"/><path d="M5 9h14a1 1 0 0 1 1 1v0a6 6 0 0 1-12 0v0a1 1 0 0 1 1-1z"/><path d="M8 18v2M12 18v2M16 18v2"/></svg>`,
+  family:     `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="18" cy="8" r="2"/><path d="M15.5 21v-1.5a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3V21"/></svg>`,
+};
+
+const NEARBY_ICONS = {
+  waves:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 16c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/></svg>`,
+  trees:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 7 9h3l-4 6h4v5h4v-5h4l-4-6h3z"/></svg>`,
+  mountain: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20l7-12 4 6 2-3 7 9z"/><path d="M13 11l-1.5 2 2 2"/></svg>`,
+  balloon:  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a6 6 0 0 1 6 6c0 4-3 6-4 8h-4c-1-2-4-4-4-8a6 6 0 0 1 6-6z"/><path d="M10 16l-1 3h6l-1-3"/><line x1="12" y1="19" x2="12" y2="22"/></svg>`,
+  car:      `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/><rect x="3" y="11" width="18" height="7" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>`,
+  ferris:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.4"/><path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3L6.3 17.7"/></svg>`,
+  paw:      `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="16.5" r="3.2"/><circle cx="5.5" cy="10.5" r="1.6"/><circle cx="9.5" cy="6" r="1.6"/><circle cx="14.5" cy="6" r="1.6"/><circle cx="18.5" cy="10.5" r="1.6"/></svg>`,
+  castle:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V10l2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2v11z"/><path d="M4 21h16"/><path d="M10 21v-5h4v5"/></svg>`,
+  shop:     `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.2-5h15.6L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></svg>`,
+  train:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="13" rx="4"/><circle cx="8.5" cy="13" r="1"/><circle cx="15.5" cy="13" r="1"/><line x1="5" y1="9" x2="19" y2="9"/><path d="M7 21l2-3M17 21l-2-3"/></svg>`,
+  hospital: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 8v8M8 12h8"/></svg>`,
+  gas:      `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><line x1="3" y1="21" x2="15" y2="21"/><line x1="4" y1="12" x2="12" y2="12"/><path d="M14 9h2l3 3v6a1.3 1.3 0 0 1-2.6 0v-2.3a1 1 0 0 0-1-1H14"/></svg>`,
+};
+
 const MORE_ICONS = {
   house:        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10.5z"/><path d="M9 22V13h6v9"/></svg>`,
   bikes:        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17l3.5-9h5l2.5 4.5"/><path d="M9 8l3 9"/></svg>`,
@@ -473,6 +513,7 @@ const screens = {
 
     const amenities = d.amenities.map(a => `
       <div class="amenity-item">
+        <span class="amenity-icon amenity-icon--${a.cat || 'green'}">${AMENITY_ICONS[a.icon] || ''}</span>
         <span class="amenity-label">${a.label}</span>
       </div>`).join('');
 
@@ -883,6 +924,7 @@ const screens = {
 
     const placesList = places.map(p => `
       <div class="place-card">
+        <span class="place-icon place-icon--${p.cat || 'green'}">${NEARBY_ICONS[p.icon] || ''}</span>
         <div class="place-info">
           <div class="place-name">${p.name}</div>
           <div class="place-desc">${p.desc}</div>
@@ -1846,6 +1888,7 @@ const actions = {
     const list   = document.querySelector('.places-list');
     if (list) list.innerHTML = places.map(p => `
       <div class="place-card">
+        <span class="place-icon place-icon--${p.cat || 'green'}">${NEARBY_ICONS[p.icon] || ''}</span>
         <div class="place-info">
           <div class="place-name">${p.name}</div>
           <div class="place-desc">${p.desc}</div>

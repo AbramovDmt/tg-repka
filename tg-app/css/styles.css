@@ -5,32 +5,40 @@
 :root {
   /* ── Светлая тема (по умолчанию) ─────────────────────────── */
 
-  /* Telegram-совместимые переменные */
-  --tg-bg:           #F7F4EF;
-  --tg-secondary-bg: #EEE9E1;
-  --tg-text:         #1C2B1E;
-  --tg-hint:         #6E8064;
-  --tg-link:         #315040;
-  --tg-button:       #3C5948;
+  /* Telegram-совместимые переменные — единая гамма с лендингом Репки */
+  --tg-bg:           #F5EFE0;
+  --tg-secondary-bg: #EFE6D3;
+  --tg-text:         #2C2416;
+  --tg-hint:         #6B5B45;
+  --tg-link:         #C8742A;
+  --tg-button:       #C8742A;
   --tg-button-text:  #FFFFFF;
 
-  /* Природный акцент — глубокий лесной (приглушённый) */
-  --accent:          #3C5948;
-  --accent-hover:    #315040;
-  --accent-light:    rgba(60,89,72,0.12);
+  /* Оранжевый акцент — как на лендинге (brand-accent) */
+  --accent:          #C8742A;
+  --accent-hover:    #A85E1F;
+  --accent-light:    rgba(200,116,42,0.12);
   --accent-text:     #FFFFFF;
 
-  /* Янтарный — тёмная терракота */
-  --amber:           #7A4728;
-  --amber-light:     rgba(122,71,40,0.12);
+  /* Янтарный — тёплый коричневый (кора), отдельно от акцента */
+  --amber:           #8B7355;
+  --amber-light:     rgba(139,115,85,0.12);
 
-  /* Терракота — мягкий акцент для заголовков */
-  --terracotta:      #C2694A;
+  /* Терракота — тот же оранж, для акцентов на заголовках */
+  --terracotta:      #C8742A;
+
+  /* Цветные категории для иконок (огонь/вода/природа) */
+  --icon-orange:     #C8742A;
+  --icon-orange-bg:  rgba(200,116,42,0.14);
+  --icon-green:      #2D4A2D;
+  --icon-green-bg:   rgba(45,74,45,0.12);
+  --icon-blue:       #3E7C94;
+  --icon-blue-bg:    rgba(62,124,148,0.13);
 
   /* Семантика */
   --danger:          #D04040;
   --warning:         #C08020;
-  --success:         #3C5948;
+  --success:         #2D4A2D;
 
   /* Компоненты */
   --card-bg:         #FFFFFF;
@@ -39,15 +47,15 @@
   --shadow-md:       0 4px 20px rgba(0,0,0,0.12);
   --shadow-lg:       0 8px 32px rgba(0,0,0,0.18);
 
-  /* Стеклянные карточки */
-  --glass-bg:               rgba(255,255,255,0.80);
-  --glass-border:           rgba(60,80,50,0.11);
-  --glass-amber-bg:         rgba(252,244,232,0.82);
-  --glass-amber-border:     rgba(122,71,40,0.18);
-  --surface-bg:             rgba(255,255,255,0.92);
-  --surface-border:         rgba(60,80,50,0.12);
-  --card-shadow:            0 4px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.70);
-  --booking-summary-border: rgba(60,89,72,0.22);
+  /* Карточки — плоские/матовые, как на лендинге (стекло оставлено только на кнопках) */
+  --glass-bg:               #FDFAF5;
+  --glass-border:           rgba(139,115,85,0.20);
+  --glass-amber-bg:         #FBF3E6;
+  --glass-amber-border:     rgba(139,115,85,0.25);
+  --surface-bg:             #FDFAF5;
+  --surface-border:         rgba(139,115,85,0.18);
+  --card-shadow:            0 2px 14px rgba(44,36,22,0.06);
+  --booking-summary-border: rgba(139,115,85,0.22);
 
   /* Шапка и таббар */
   --header-bg:     rgba(247,244,239,0.94);
@@ -77,27 +85,34 @@
 
 /* ── Тёмная тема ─────────────────────────────────────────────── */
 body.dark {
-  --tg-bg:           #0D1B0F;
-  --tg-secondary-bg: #132016;
-  --tg-text:         #E8F0DF;
-  --tg-hint:         #7A9470;
-  --tg-link:         #6A9E7E;
-  --tg-button:       #5A8E70;
-  --tg-button-text:  #F0F8F2;
+  --tg-bg:           #1A2416;
+  --tg-secondary-bg: #22301C;
+  --tg-text:         #F0EADC;
+  --tg-hint:         #B5A98C;
+  --tg-link:         #E0916E;
+  --tg-button:       #E0916E;
+  --tg-button-text:  #1A2416;
 
-  --accent:          #5A8E70;
-  --accent-hover:    #4E7D62;
-  --accent-light:    rgba(90,142,112,0.16);
-  --accent-text:     #F0F8F2;
+  --accent:          #E0916E;
+  --accent-hover:    #E8A883;
+  --accent-light:    rgba(224,145,110,0.18);
+  --accent-text:     #1A2416;
 
-  --amber:           #9A6430;
-  --amber-light:     rgba(154,100,48,0.14);
+  --amber:           #A08862;
+  --amber-light:     rgba(160,136,98,0.16);
 
   --terracotta:      #E0916E;
 
+  --icon-orange:     #E0916E;
+  --icon-orange-bg:  rgba(224,145,110,0.20);
+  --icon-green:      #7FAE7F;
+  --icon-green-bg:   rgba(127,174,127,0.18);
+  --icon-blue:       #6FB8D1;
+  --icon-blue-bg:    rgba(111,184,209,0.18);
+
   --danger:          #E05858;
   --warning:         #E0A030;
-  --success:         #5A8E70;
+  --success:         #7FAE7F;
 
   --card-bg:         #162418;
   --divider:         rgba(180,220,155,0.10);
@@ -105,14 +120,14 @@ body.dark {
   --shadow-md:       0 4px 20px rgba(0,0,0,0.60);
   --shadow-lg:       0 8px 32px rgba(0,0,0,0.72);
 
-  --glass-bg:               rgba(20,34,22,0.72);
-  --glass-border:           rgba(180,220,155,0.10);
-  --glass-amber-bg:         rgba(40,28,10,0.70);
-  --glass-amber-border:     rgba(224,144,64,0.22);
-  --surface-bg:             rgba(18,30,20,0.85);
-  --surface-border:         rgba(180,220,155,0.14);
-  --card-shadow:            0 4px 24px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
-  --booking-summary-border: rgba(90,142,112,0.25);
+  --glass-bg:               #22301C;
+  --glass-border:           rgba(160,136,98,0.22);
+  --glass-amber-bg:         #2E2013;
+  --glass-amber-border:     rgba(160,136,98,0.28);
+  --surface-bg:             #22301C;
+  --surface-border:         rgba(160,136,98,0.20);
+  --card-shadow:            0 2px 14px rgba(0,0,0,0.35);
+  --booking-summary-border: rgba(160,136,98,0.25);
 
   --header-bg:     rgba(9,18,10,0.90);
   --header-border: rgba(180,220,155,0.10);
@@ -695,6 +710,7 @@ textarea, input { font-family: var(--font); }
 
 .house-name {
   font-family: var(--font-display);
+  font-style: italic;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -755,6 +771,22 @@ body.dark .amenity-item {
   background: rgba(180,220,155,0.07);
   border-color: rgba(180,220,155,0.15);
 }
+
+.amenity-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.amenity-icon svg { width: 15px; height: 15px; }
+
+.amenity-icon--orange { background: var(--icon-orange-bg); color: var(--icon-orange); }
+.amenity-icon--green  { background: var(--icon-green-bg);  color: var(--icon-green); }
+.amenity-icon--blue   { background: var(--icon-blue-bg);   color: var(--icon-blue); }
 
 .amenity-label {
   font-size: 13px;
@@ -1473,7 +1505,21 @@ body.dark .amenity-item {
   box-shadow: var(--shadow-sm);
 }
 
-.place-icon { font-size: 28px; flex-shrink: 0; }
+.place-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.place-icon svg { width: 19px; height: 19px; }
+
+.place-icon--orange { background: var(--icon-orange-bg); color: var(--icon-orange); }
+.place-icon--green  { background: var(--icon-green-bg);  color: var(--icon-green); }
+.place-icon--blue   { background: var(--icon-blue-bg);   color: var(--icon-blue); }
 
 .place-info { flex: 1; min-width: 0; }
 
@@ -2069,6 +2115,7 @@ body.dark .amenity-item {
 
 .onboarding-title {
   font-family: var(--font-display);
+  font-style: italic;
   font-size: 26px;
   font-weight: 700;
   color: var(--tg-text);
